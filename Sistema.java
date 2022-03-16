@@ -7,6 +7,7 @@
 
 import java.util.*;
 
+
 public class Sistema {
 
 	// -------------------------------------------------------------------------------------------------------
@@ -102,8 +103,8 @@ public class Sistema {
 						break;
 
 					case STD: // [A] ← Rs
-						m[ir.p].opc = Opcode.DATA;
-						m[ir.p].p = reg[ir.r1];
+						m[ir.p].opc = Opcode.DATA; //diz que a próxima coisa que a memória vai receber é um dado, e não uma instrução 
+						m[ir.p].p = reg[ir.r1]; // no atributo p 
 						pc++;
 						break;
 
@@ -176,19 +177,31 @@ public class Sistema {
 
 					case JMPIGM: //if Rc > 0 then PC ← [A] else PC ← PC +1
 						if(reg[ir.r2] > 0){
-							 
+							pc = m[ir.p].p;
 						}else{
 							pc++;
 						}
 						break;
 
-					case JMPILM:
+					case JMPILM: //if Rc < 0 then PC ← [A] else PC ← PC +1
+						if(reg[ir.r2] < 0){
+							pc = m[ir.p].p;
+						}else{
+							pc++;
+						}
 						break;
-					case JMPIEM:
+					case JMPIEM: //if Rc = 0 then PC ← [A] else PC ← PC +1
+						if(reg[ir.r2] == 0){
+							pc = m[ir.p].p;
+						}else{
+							pc++;
+						}
 						break;
-					case SUBI:
+					case SUBI: //Rd ← Rd – k
+						reg[ir.r1] -= m[ir.p].p;
 						break;
-					case LDD:
+					case LDD: // Rd ← [A]
+						reg[ir.r1] = m[ir.p].p;
 						break;
 					case LDX:
 						break;
