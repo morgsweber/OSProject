@@ -176,7 +176,7 @@ public class Sistema {
 
 					case JMPIGM: //if Rc > 0 then PC ← [A] else PC ← PC +1
 						if(reg[ir.r2] > 0){
-							 
+							 pc = m[ir.p].p;
 						}else{
 							pc++;
 						}
@@ -199,7 +199,8 @@ public class Sistema {
 						break;
 
 					case SUBI: //Rd ← Rd – k
-						reg[ir.r1] -= m[ir.p].p;
+						reg[ir.r1] -= ir.p;
+						pc++;
 						break;
 
 					case LDD: // Rd ← [A]
