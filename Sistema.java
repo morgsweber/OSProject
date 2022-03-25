@@ -163,53 +163,65 @@ public class Sistema {
 						break;
 
 					case JMPIL: // Rc < 0 then PC ← Rs else PC ← PC +1
-						if(reg[ir.r2] < 0){
+						if (reg[ir.r2] < 0) {
 							pc = reg[ir.r1];
 						} else {
-							pc ++;
+							pc++;
 						}
 						break;
 
-					case JMPIM: //PC ← [A]
-						pc = m[ir.p].p; //?? ou Opcode.DATA???
+					case JMPIM: // PC ← [A]
+						pc = m[ir.p].p; // ?? ou Opcode.DATA???
 						break;
 
+<<<<<<< HEAD
 					case JMPIGM: //if Rc > 0 then PC ← [A] else PC ← PC +1
 						if(reg[ir.r2] > 0){
 							 pc = m[ir.p].p;
 						}else{
+=======
+					case JMPIGM: // if Rc > 0 then PC ← [A] else PC ← PC +1
+						if (reg[ir.r2] > 0) {
+							pc = ir.p;
+						} else {
+>>>>>>> 7dc70a4 (PA e uma parte do PB)
 							pc++;
 						}
 						break;
 
-					case JMPILM: //if Rc < 0 then PC ← [A] else PC ← PC +1
-						if(reg[ir.r2] < 0){
+					case JMPILM: // if Rc < 0 then PC ← [A] else PC ← PC +1
+						if (reg[ir.r2] < 0) {
 							pc = m[ir.p].p;
-						}else{
+						} else {
 							pc++;
 						}
 						break;
 
-					case JMPIEM: //if Rc = 0 then PC ← [A] else PC ← PC +1
-						if(reg[ir.r2] == 0){
+					case JMPIEM: // if Rc = 0 then PC ← [A] else PC ← PC +1
+						if (reg[ir.r2] == 0) {
 							pc = m[ir.p].p;
-						}else{
+						} else {
 							pc++;
 						}
 						break;
 
+<<<<<<< HEAD
 					case SUBI: //Rd ← Rd – k
 						reg[ir.r1] -= ir.p;
+=======
+					case SUBI: // Rd ← Rd – k
+						reg[ir.r1] = reg[ir.r1] - ir.p;
+>>>>>>> 7dc70a4 (PA e uma parte do PB)
 						pc++;
 						break;
 
 					case LDD: // Rd ← [A]
 						reg[ir.r1] = m[ir.p].p;
+						pc++;
 						break;
 
-					case LDX: //Rd ← [Rs]
-						m[reg[ir.r2]].opc = Opcode.DATA;
-						m[reg[ir.r1]].p = reg[ir.r2];
+					case LDX: // Rd ← [Rs]
+						reg[ir.r1] = m[reg[ir.r2]].p;
 						pc++;
 						break;
 
@@ -232,6 +244,13 @@ public class Sistema {
 					// if int ligada - vai para tratamento da int
 					// desviar para rotina java que trata int
 				}
+
+				// try {
+				// 	Thread.sleep(2000);
+				// } catch (InterruptedException e) {
+				// 	// TODO Auto-generated catch block
+				// 	e.printStackTrace();
+				// }
 			}
 		}
 	}
@@ -344,7 +363,7 @@ public class Sistema {
 	// ------------------- instancia e testa sistema
 	public static void main(String args[]) {
 		Sistema s = new Sistema();
-		s.roda(progs.fibonacci10); // "progs" significa acesso/referencia ao programa em memoria secundaria
+		s.roda(progs.pa); // "progs" significa acesso/referencia ao programa em memoria secundaria
 		// s.roda(progs.progMinimo);
 		// s.roda(progs.fatorial);
 	}
@@ -355,6 +374,7 @@ public class Sistema {
 	// -------------------------------------------- programas aa disposicao para
 	// copiar na memoria (vide carga)
 	public class Programas {
+
 		public Word[] progMinimo = new Word[] {
 				// OPCODE R1 R2 P :: VEJA AS COLUNAS VERMELHAS DA TABELA DE DEFINICAO DE
 				// OPERACOES
@@ -368,7 +388,7 @@ public class Sistema {
 				new Word(Opcode.STOP, -1, -1, -1) };
 
 		public Word[] fibonacci10 = new Word[] { // mesmo que prog exemplo, so que usa r0 no lugar de r8
-				new Word(Opcode.LDI, 1, -1, 0),
+				new Word(Opcode.LDD, 1, -1, 0),
 				new Word(Opcode.STD, 1, -1, 20), // 20 posicao de memoria onde inicia a serie de fibonacci gerada
 				new Word(Opcode.LDI, 2, -1, 1),
 				new Word(Opcode.STD, 2, -1, 21),
@@ -412,7 +432,43 @@ public class Sistema {
 				new Word(Opcode.JMP, -1, -1, 4), // 7 vai p posicao 4
 				new Word(Opcode.STD, 1, -1, 10), // 8 coloca valor de r1 na posição 10
 				new Word(Opcode.STOP, -1, -1, -1), // 9 stop
-				new Word(Opcode.DATA, -1, -1, -1) }; // 10 ao final o valor do fatorial estará na posição 10 da memória
+				new Word(Opcode.DATA, -1, -1, -1)
+		}; // 10 ao final o valor do fatorial estará na posição 10 da memória
+
+		public Word[] pa = new Word[]
+		{
+			new Word(Opcode.LDI, 0, -1, 5), //0 carrega o valor 28 (numero) no registrador 0
+			new Word(Opcode.STD, 0, -1, 37), //1ega o valor que tava no registrador 0 e coloca na posição 37 na memória
+			new Word(Opcode.LDD, 1, -1, 37), //2 pega o valor da posição 37 da memória pra dentro do registrador 1
+			new Word(Opcode.SUBI, 1, -1, 1), // 3tira 1 valor do que entrou (no caso 5), por conta do zero .... 0-4 (5 valores)
+
+			new Word(Opcode.LDI, 2, -1, 900), //4 registrador que vai controlar o incremento de posição de memória 
+			new Word(Opcode.JMPILM, -1, 1, 21), //5
+
+			new Word(Opcode.LDI, 5, -1, 1),//6
+			new Word(Opcode.STX, 2, 5, -1), //7 pega o valor 1 que tá no registrador 5 e carrega na posição 900 que é o valor armazenado no registrador 2
+			new Word(Opcode.SUBI, 1, -1, 1), //8 desconta um dos valores do r1 
+			new Word(Opcode.JMPILM, -1, 1, 23), //9
+			new Word(Opcode.ADDI, 2, -1, 1), //10 soma 1 ao valor que está no registrador 2 (posição de memória)
+			new Word(Opcode.LDI, 6, -1, 1), //11 carrega o v1 no r6
+			new Word(Opcode.STX, 2, 6, -1), //12 carrega o segundo valor na próxima posição
+			new Word(Opcode.SUBI, 1, -1, 1),// 13
+			new Word(Opcode.JMPILM, -1, 1, 23),//14
+
+			new Word(Opcode.ADDI, 2, -1, 1),// 15 
+			new Word(Opcode.ADD, 5, 6, -1),
+			new Word(Opcode.SWAP, 5, 6, -1),
+			new Word(Opcode.STX, 2, 6, -1),
+			new Word(Opcode.JMPIGM, -1, 1, 13),
+			new Word(Opcode.JMP, -1, -1, 23),
+
+			new Word(Opcode.LDI, 3, -1, -1), 
+			new Word(Opcode.STX, 2, 3, -1), //17 pega o que tá no registrador 3 (-1) e coloca na posição que tá no registrado 2 (900) de memória 
+			new Word(Opcode.STOP, -1, -1, -1)
+
+
+			
+		};
 	}
 }
 
