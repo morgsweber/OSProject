@@ -174,17 +174,10 @@ public class Sistema {
 						pc = m[ir.p].p; // ?? ou Opcode.DATA???
 						break;
 
-<<<<<<< HEAD
-					case JMPIGM: //if Rc > 0 then PC ← [A] else PC ← PC +1
-						if(reg[ir.r2] > 0){
-							 pc = m[ir.p].p;
-						}else{
-=======
 					case JMPIGM: // if Rc > 0 then PC ← [A] else PC ← PC +1
 						if (reg[ir.r2] > 0) {
 							pc = ir.p;
 						} else {
->>>>>>> 7dc70a4 (PA e uma parte do PB)
 							pc++;
 						}
 						break;
@@ -205,13 +198,8 @@ public class Sistema {
 						}
 						break;
 
-<<<<<<< HEAD
-					case SUBI: //Rd ← Rd – k
-						reg[ir.r1] -= ir.p;
-=======
 					case SUBI: // Rd ← Rd – k
 						reg[ir.r1] = reg[ir.r1] - ir.p;
->>>>>>> 7dc70a4 (PA e uma parte do PB)
 						pc++;
 						break;
 
