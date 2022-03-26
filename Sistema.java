@@ -425,8 +425,9 @@ public class Sistema {
  		// se for maior que zero este é o número de valores da sequencia de fibonacci a 
  		// serem escritos em sequencia a partir de uma posição de memória;
 
-		public Word[] pa = new Word[] {
-			new Word(Opcode.LDI, 0, -1, 5), 		// 0 carrega o valor 28 no registrador 0
+		public Word[] pa = new Word[] 
+		{
+			new Word(Opcode.LDI, 0, -1, 5), 		// 0 carrega o valor 5 no registrador 0
 			new Word(Opcode.STD, 0, -1, 37), 		//1 pega o valor do r0 e coloca na posição 37 da memória
 			new Word(Opcode.LDD, 1, -1, 37), 		//2 pega o valor da posição 37 da memória e coloca em r1
 			new Word(Opcode.SUBI, 1, -1, 1), 		//3 subtrai 1 do valor que entrou (no caso 5), por conta do zero: 0-4 (5 valores)
@@ -450,6 +451,34 @@ public class Sistema {
 			new Word(Opcode.LDI, 3, -1, -1),		//21 carrega -1 no r3		
 			new Word(Opcode.STX, 2, 3, -1), 		//22 pega o que tá no r3 (-1) e coloca na posição de memória do r2 (900)
 			new Word(Opcode.STOP, -1, -1, -1)		//23 para o programa
+		};
+
+		// PB: dado um inteiro em alguma posição de memória, 
+ 		// se for negativo armazena -1 na saída; se for positivo responde o fatorial do número na saída
+
+		public Word[] pb = new Word[]
+		{
+			new Word(Opcode.LDI, 0, -1, 3), 		//0 carrega o valor 3 no r0
+			new Word(Opcode.STD, 0, -1, 36), 		//1 carrega o valor do r0 na posição 36 da memória
+			new Word(Opcode.LDI, 3, -1, 800),		//2 carrega no r3 a posição de memória 
+			new Word(Opcode.LDD, 1, -1, 36),		//3 pega o valor da posição 36 da memória e coloca em r1
+			new Word(Opcode.LDD, 2, -1, 36),		//4 carrega em r2 o mesmo valor de r1
+			new Word(Opcode.SUB, 2, -1, 1),			//5 subtrai 1 do valor que tinha em r2
+			new Word(Opcode.MULT, 1, 2, -1),		//6 multiplica r1 e r2 e coloca em r1 o valor 
+			new Word(Opcode.STX, 3, 1, -1),			//7 carrega o valor de r1 na posição de memória armazenada em r3
+			new Word(Opcode.SUB, 2, -1, 1),			//8 subtrai 1 do r2
+			//new Word(Opcode., _r1, _r2, _p)			//verifica se é > 0 pula, se não, segue e termina 
+		};
+
+		// PC: para um N definido (10 por exemplo)
+		// o programa ordena um vetor de N números em alguma posição de memória;
+		// ordena usando bubble sort
+		// loop ate que não swap nada
+		// passando pelos N valores 
+		// faz swap de vizinhos se da esquerda maior que da direita
+		public Word[] pc = new Word[]
+		{
+
 		};
 	}
 }
