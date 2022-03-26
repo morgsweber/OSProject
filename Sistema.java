@@ -424,7 +424,6 @@ public class Sistema {
  		// se o número for menor que zero coloca -1 no início da posição de memória para saída; 
  		// se for maior que zero este é o número de valores da sequencia de fibonacci a 
  		// serem escritos em sequencia a partir de uma posição de memória;
-
 		public Word[] pa = new Word[] 
 		{
 			new Word(Opcode.LDI, 0, -1, 5), 		// 0 carrega o valor 5 no registrador 0
@@ -455,7 +454,6 @@ public class Sistema {
 
 		// PB: dado um inteiro em alguma posição de memória, 
  		// se for negativo armazena -1 na saída; se for positivo responde o fatorial do número na saída
-
 		public Word[] pb = new Word[]
 		{
 			new Word(Opcode.LDI, 0, -1, 3), 		//0 carrega o valor 3 no r0
@@ -482,6 +480,20 @@ public class Sistema {
 		// faz swap de vizinhos se da esquerda maior que da direita
 		public Word[] pc = new Word[]
 		{
+			new Word(Opcode.LDI, 0, -1, 3), 		//0 carrega o valor 3 no r0
+			new Word(Opcode.STD, 0, -1, 700), 		//1 carrega o valor do r0 na posição 700 da memória
+			new Word(Opcode.LDI, 0, -1, 5), 		//2 carrega o valor 5 no r0
+			new Word(Opcode.STD, 0, -1, 701), 		//3 carrega o valor do r0 na posição 701 da memória
+			new Word(Opcode.LDI, 0, -1, 1), 		//4 carrega o valor 1 no r0
+			new Word(Opcode.STD, 0, -1, 702), 		//5 carrega o valor do r0 na posição 702 da memória
+			new Word(Opcode.LDI, 0, -1, 100), 		//6 carrega o valor 100 no r0
+			new Word(Opcode.STD, 0, -1, 703), 		//1 carrega o valor do r0 na posição 703 da memória
+			new Word(Opcode.LDI, 0, -1, 8), 		//0 carrega o valor 8 no r0
+			new Word(Opcode.STD, 0, -1, 704), 		//1 carrega o valor do r0 na posição 704 da memória
+			new Word(Opcode.LDI, 0, -1, 74), 		//0 carrega o valor 74 no r0
+			new Word(Opcode.STD, 0, -1, 705), 		//1 carrega o valor do r0 na posição 705 da memória
+			new Word(Opcode.LDI, 0, -1, 0), 		//0 carrega o valor 0 no r0
+			new Word(Opcode.STD, 0, -1, 706), 		//1 carrega o valor do r0 na posição 706 da memória
 
 		};
 	}
