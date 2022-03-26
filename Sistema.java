@@ -460,14 +460,18 @@ public class Sistema {
 		{
 			new Word(Opcode.LDI, 0, -1, 3), 		//0 carrega o valor 3 no r0
 			new Word(Opcode.STD, 0, -1, 36), 		//1 carrega o valor do r0 na posição 36 da memória
-			new Word(Opcode.LDI, 3, -1, 800),		//2 carrega no r3 a posição de memória 
-			new Word(Opcode.LDD, 1, -1, 36),		//3 pega o valor da posição 36 da memória e coloca em r1
+			new Word(Opcode.LDD, 1, -1, 36),		//2 pega o valor da posição 36 da memória e coloca em r1
+			new Word(Opcode.JMPILM, -1, 1, 11),		//3 se for negativo, pula pra instrução 11
 			new Word(Opcode.LDD, 2, -1, 36),		//4 carrega em r2 o mesmo valor de r1
-			new Word(Opcode.SUB, 2, -1, 1),			//5 subtrai 1 do valor que tinha em r2
-			new Word(Opcode.MULT, 1, 2, -1),		//6 multiplica r1 e r2 e coloca em r1 o valor 
-			new Word(Opcode.STX, 3, 1, -1),			//7 carrega o valor de r1 na posição de memória armazenada em r3
-			new Word(Opcode.SUB, 2, -1, 1),			//8 subtrai 1 do r2
-			//new Word(Opcode., _r1, _r2, _p)			//verifica se é > 0 pula, se não, segue e termina 
+			new Word(Opcode.SUB, 1, -1, 1),			//5 subtrai 1 do valor que tinha em r1
+			new Word(Opcode.MULT, 2, 2, -1),		//6 multiplica r1 e r2 e coloca em r2 o valor 
+			new Word(Opcode.SUB, 1, -1, 1),			//7 subtrai 1 do r1
+			new Word(Opcode.JMPIGM, -1, 1, 6),		//8 se for maior que 0, volta pra instrução 6 se não, segue o fluxo
+			new Word(Opcode.STD, 2, -1, 35),		//9 coloca na posição 35 da memória o resultado do fatorial
+			new Word(Opcode.JMP, -1, -1, 13),		//10 pula pro stop
+			new Word(Opcode.LDI, 1, -1, -1),		//11 carrega no r1 o valor -1
+			new Word(Opcode.STD, 1, -1, 35),		//12 coloca na posição 35 da memória o valor -1
+			new Word(Opcode.STOP, -1, -1, -1)		//13 termina a execução
 		};
 
 		// PC: para um N definido (10 por exemplo)
