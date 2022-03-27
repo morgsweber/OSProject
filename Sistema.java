@@ -43,11 +43,16 @@ public class Sistema {
 		LDI, LDD, STD, LDX, STX, SWAP; // movimentacao
 	}
 
+	public enum Interruptions{
+		OverFlow, EnderecoInvalido, InstrucaoInvalida, SemInterrupcao;
+	}
+
 	public class CPU {
 		// característica do processador: contexto da CPU ...
 		private int pc; // ... composto de program counter,
 		private Word ir; // instruction register,
 		private int[] reg; // registradores da CPU
+		private Interruptions interrupcao;
 
 		private Word[] m; // CPU acessa MEMORIA, guarda referencia 'm' a ela. memoria nao muda. ee sempre
 							// a mesma.
@@ -55,6 +60,23 @@ public class Sistema {
 		public CPU(Word[] _m) { // ref a MEMORIA e interrupt handler passada na criacao da CPU
 			m = _m; // usa o atributo 'm' para acessar a memoria.
 			reg = new int[8]; // aloca o espaço dos registradores
+			interrupcao = Interruptions.SemInterrupcao;
+		}
+
+		public boolean trataInterruptOverflow(int valor){
+			if(valor >  -2147483647 && valor < 2147483647){
+				return true;
+			}
+			interrupcao = Interruptions.OverFlow;
+			return false;
+		}
+
+		public boolean trataInterruptEndInv(int endereco){
+			if(endereco >= 0 && endereco < m.length){
+				return true;
+			}
+			interrupcao = Interruptions.EnderecoInvalido;
+			return false;
 		}
 
 		public void setContext(int _pc) { // no futuro esta funcao vai ter que ser
@@ -89,6 +111,10 @@ public class Sistema {
 		public void run() { // execucao da CPU supoe que o contexto da CPU, vide acima, esta devidamente
 							// setado
 			while (true) { // ciclo de instrucoes. acaba cfe instrucao, veja cada caso.
+
+				if(interrupcao != Interruptions.SemInterrupcao){
+					break;
+				}
 				// FETCH
 				ir = m[pc]; // busca posicao da memoria apontada por pc, guarda em ir
 				// if debug
@@ -98,22 +124,28 @@ public class Sistema {
 
 					/***********Instruções JUMP***********/
 					case JMP: // PC ← k										Dotti
-						pc = ir.p;
+						if(trataInterruptEndInv(ir.p)) {
+							pc = ir.p;
+						}
 						break;
 
 					case JMPIG: // If Rc > 0 Then PC ← Rs Else PC ← PC +1	Dotti
-						if (reg[ir.r2] > 0) {
-							pc = reg[ir.r1];
-						} else {
-							pc++;
+						if(trataInterruptEndInv(reg[ir.r1])) {
+							if (reg[ir.r2] > 0) {
+								pc = reg[ir.r1];
+							} else {
+								pc++;
+							}
 						}
 						break;
 
 					case JMPIE: // If Rc = 0 Then PC ← Rs Else PC ← PC +1	Dotti
-						if (reg[ir.r2] == 0) {
-							pc = reg[ir.r1];
-						} else {
-							pc++;
+						if(trataInterruptEndInv(reg[ir.r1])) {
+							if (reg[ir.r2] == 0) {
+								pc = reg[ir.r1];
+							} else {
+								pc++;
+							}
 						}
 						break;
 
@@ -121,14 +153,18 @@ public class Sistema {
 						break;
 
 					case JMPI: // PC ← Rs
-						pc = reg[ir.r1];
+						if(trataInterruptEndInv(reg[ir.r1])) {
+							pc = reg[ir.r1];
+						}
 						break;
 
 					case JMPIL: // Rc < 0 then PC ← Rs else PC ← PC +1
-						if (reg[ir.r2] < 0) {
-							pc = reg[ir.r1];
-						} else {
-							pc++;
+						if(trataInterruptEndInv(reg[ir.r1])) {
+							if (reg[ir.r2] < 0) {
+								pc = reg[ir.r1];
+							} else {
+								pc++;
+							}
 						}
 						break;
 
@@ -138,7 +174,7 @@ public class Sistema {
 
 					case JMPIGM: // if Rc > 0 then PC ← [A] else PC ← PC +1
 						if (reg[ir.r2] > 0) {
-							pc = ir.p;
+							pc = m[ir.p].p;
 						} else {
 							pc++;
 						}
@@ -161,31 +197,39 @@ public class Sistema {
 						break;
 
 					/**********Instruções aritméticas***********/
-					case ADD: // Rd ← Rd + Rs							
-						reg[ir.r1] = reg[ir.r1] + reg[ir.r2];
-						pc++;
+					case ADD: // Rd ← Rd + Rs
+						if(trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(reg[ir.r2]) && trataInterruptOverflow(reg[ir.r1]+reg[ir.r2])) {
+							reg[ir.r1] = reg[ir.r1] + reg[ir.r2];
+							pc++;
+						}
 						break;
 
 					case MULT: // Rd ← Rd * Rs							Dotti
-						reg[ir.r1] = reg[ir.r1] * reg[ir.r2];
-						// gera um overflow
-						// --> LIGA INT (1)
-						pc++;
+						if(trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(reg[ir.r2]) && trataInterruptOverflow(reg[ir.r1] * reg[ir.r2])) {
+							reg[ir.r1] = reg[ir.r1] * reg[ir.r2];
+							pc++;
+						}
 						break;
 
 					case ADDI: // Rd ← Rd + k							Dotti
-						reg[ir.r1] = reg[ir.r1] + ir.p;
-						pc++;
+						if(trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(ir.p) && trataInterruptOverflow(reg[ir.r1] + ir.p)){
+							reg[ir.r1] = reg[ir.r1] + ir.p;
+							pc++;
+						}
 						break;
 
 					case SUB: // Rd ← Rd - Rs							Dotti
-						reg[ir.r1] = reg[ir.r1] - reg[ir.r2];
-						pc++;
+						if(trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(reg[ir.r2]) && trataInterruptOverflow(reg[ir.r1]-reg[ir.r2])) {
+							reg[ir.r1] = reg[ir.r1] - reg[ir.r2];
+							pc++;
+						}
 						break;
 
 					case SUBI: // Rd ← Rd – k
-						reg[ir.r1] = reg[ir.r1] - ir.p;
-						pc++;
+						if(trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(ir.p) && trataInterruptOverflow(reg[ir.r1] - ir.p)) {
+							reg[ir.r1] = reg[ir.r1] - ir.p;
+							pc++;
+						}
 						break;
 
 					/***********Instruções de movimentação***********/
@@ -226,6 +270,7 @@ public class Sistema {
 					default:
 						// opcode desconhecido
 						// liga interrup (2)
+
 				}
 
 				// VERIFICA INTERRUPÇÃO !!! - TERCEIRA FASE DO CICLO DE INSTRUÇÕES
