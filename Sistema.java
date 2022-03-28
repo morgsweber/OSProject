@@ -64,7 +64,7 @@ public class Sistema {
 		}
 
 		public boolean trataInterruptOverflow(int valor){
-			if(valor >  -2147483647 && valor < 2147483647){
+			if(valor >  Integer.MIN_VALUE && valor < Integer.MAX_VALUE){
 				return true;
 			}
 			interrupcao = Interruptions.OverFlow;
@@ -113,6 +113,17 @@ public class Sistema {
 			while (true) { // ciclo de instrucoes. acaba cfe instrucao, veja cada caso.
 
 				if(interrupcao != Interruptions.SemInterrupcao){
+					switch (interrupcao){
+						case OverFlow:
+							System.out.println("Overflow");
+							break;
+						case EnderecoInvalido:
+							System.out.println("Endereço Inválido");
+							break;
+						case InstrucaoInvalida:
+							System.out.println("Instrução Inválida");
+							break;
+					}
 					break;
 				}
 				// FETCH
@@ -270,6 +281,7 @@ public class Sistema {
 					default:
 						// opcode desconhecido
 						// liga interrup (2)
+						interrupcao = Interruptions.InstrucaoInvalida;
 
 				}
 
@@ -395,6 +407,7 @@ public class Sistema {
 		s.roda(progs.pa); // "progs" significa acesso/referencia ao programa em memoria secundaria
 		// s.roda(progs.progMinimo);
 		// s.roda(progs.fatorial);
+		//s.roda(progs.pb);
 	}
 	// -------------------------------------------------------------------------------------------------------
 	// --------------- TUDO ABAIXO DE MAIN É AUXILIAR PARA FUNCIONAMENTO DO SISTEMA
