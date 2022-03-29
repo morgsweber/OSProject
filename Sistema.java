@@ -115,13 +115,13 @@ public class Sistema {
 				if(interrupcao != Interruptions.SemInterrupcao){
 					switch (interrupcao){
 						case OverFlow:
-							System.out.println("Overflow");
+							System.out.println("----------Interrupção do tipo: Overflow----------");
 							break;
 						case EnderecoInvalido:
-							System.out.println("Endereço Inválido");
+							System.out.println("----------Interrupção do tipo: Endereço Inválido----------");
 							break;
 						case InstrucaoInvalida:
-							System.out.println("Instrução Inválida");
+							System.out.println("----------Interrupção do tipo: Instrução Inválida----------");
 							break;
 					}
 					break;
@@ -180,30 +180,38 @@ public class Sistema {
 						break;
 
 					case JMPIM: // PC ← [A]
-						pc = m[ir.p].p; // ?? ou Opcode.DATA???
+						if(trataInterruptEndInv(ir.p)) {
+							pc = m[ir.p].p; // ?? ou Opcode.DATA???
+						}
 						break;
 
 					case JMPIGM: // if Rc > 0 then PC ← [A] else PC ← PC +1
-						if (reg[ir.r2] > 0) {
-							pc = m[ir.p].p;
-						} else {
-							pc++;
+						if(trataInterruptEndInv(ir.p)) {
+							if (reg[ir.r2] > 0) {
+								pc = m[ir.p].p;
+							} else {
+								pc++;
+							}
 						}
 						break;
 
 					case JMPILM: // if Rc < 0 then PC ← [A] else PC ← PC +1
-						if (reg[ir.r2] < 0) {
-							pc = m[ir.p].p;
-						} else {
-							pc++;
+						if(trataInterruptEndInv(ir.p)){
+							if (reg[ir.r2] < 0) {
+								pc = m[ir.p].p;
+							} else {
+								pc++;
+							}
 						}
 						break;
 
 					case JMPIEM: // if Rc = 0 then PC ← [A] else PC ← PC +1
-						if (reg[ir.r2] == 0) {
-							pc = m[ir.p].p;
-						} else {
-							pc++;
+						if(trataInterruptEndInv(ir.p)){
+							if (reg[ir.r2] == 0) {
+								pc = m[ir.p].p;
+							} else {
+								pc++;
+							}
 						}
 						break;
 
@@ -245,30 +253,40 @@ public class Sistema {
 
 					/***********Instruções de movimentação***********/
 					case LDD: // Rd ← [A]
-						reg[ir.r1] = m[ir.p].p;
-						pc++;
+						if(trataInterruptEndInv(ir.p) && trataInterruptOverflow(m[ir.p].p)) {
+							reg[ir.r1] = m[ir.p].p;
+							pc++;
+						}
 						break;
 
 					case LDX: // Rd ← [Rs]
-						reg[ir.r1] = m[reg[ir.r2]].p;
-						pc++;
+						if(trataInterruptEndInv(reg[ir.r2]) && trataInterruptOverflow(reg[ir.r1])) {
+							reg[ir.r1] = m[reg[ir.r2]].p;
+							pc++;
+						}
 						break;
 
 					case STX: // [Rd] ←Rs							Dotti
-						m[reg[ir.r1]].opc = Opcode.DATA;
-						m[reg[ir.r1]].p = reg[ir.r2];
-						pc++;
+						if(trataInterruptEndInv(reg[ir.r1]) && trataInterruptOverflow(reg[ir.r2])) {
+							m[reg[ir.r1]].opc = Opcode.DATA;
+							m[reg[ir.r1]].p = reg[ir.r2];
+							pc++;
+						}
 						break;
 
 					case LDI: // Rd ← k								Dotti
-						reg[ir.r1] = ir.p;
-						pc++;
+						if(trataInterruptOverflow(ir.p)) {
+							reg[ir.r1] = ir.p;
+							pc++;
+						}
 						break;
 
 					case STD: // [A] ← Rs							Dotti
-						m[ir.p].opc = Opcode.DATA;
-						m[ir.p].p = reg[ir.r1];
-						pc++;
+						if(trataInterruptEndInv(ir.p) && trataInterruptOverflow(m[ir.p].p)) {
+							m[ir.p].opc = Opcode.DATA;
+							m[ir.p].p = reg[ir.r1];
+							pc++;
+						}
 						break;
 
 					case SWAP:
