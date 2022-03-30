@@ -523,13 +523,13 @@ public class Sistema {
 		// se for maior que zero este é o número de valores da sequencia de fibonacci a
 		// serem escritos em sequencia a partir de uma posição de memória;
 		public Word[] pa = new Word[] {
-				new Word(Opcode.LDI, 0, -1, 6), 	// 0 carrega o valor 5 no registrador 0
+				new Word(Opcode.LDI, 0, -1, 5), 	// 0 carrega o valor 5 no registrador 0
 				new Word(Opcode.STD, 0, -1, 37), 	// 1 pega o valor do r0 e coloca na posição 37 da memória
 				new Word(Opcode.LDD, 1, -1, 37), 	// 2 pega o valor da posição 37 da memória e coloca em r1
 				new Word(Opcode.SUBI, 1, -1, 1), 	// 3 subtrai 1 do valor que entrou (no caso 5), por conta do zero: 0-4 (5 valores)
 				new Word(Opcode.LDI, 2, -1, 900), 	// 4 registrador que vai controlar o incremento de posição de memória
-				new Word(Opcode.LDI, 7, -1, 25),		// 5 carrega o valor 22 no registrador 7
-				new Word(Opcode.JMPIL, 7, 1, -1), // 6 verifica se o valor no r1 é menor que 0, se sim, pula p/ instrução 23, se não, segue o fluxo
+				new Word(Opcode.LDI, 7, -1, 25),		// 5 carrega o valor 25 no registrador 7
+				new Word(Opcode.JMPIL, 7, 1, -1), // 6 verifica se o valor no r1 é menor que 0, se sim, pula p/ instrução 25, guardada no r7, se não, segue o fluxo
 				new Word(Opcode.LDI, 5, -1, 1), 	// 7 carrega o primeiro valor de Fibonacci (1) no r5
 				new Word(Opcode.STX, 2, 5, -1), 	// 8 pega o valor do r5 e carrega na posição 900 (valor armazenado no r2)
 				new Word(Opcode.SUBI, 1, -1, 1), 	// 9 subtrai 1 dos valores do r1
@@ -580,20 +580,22 @@ public class Sistema {
 		// passando pelos N valores
 		// faz swap de vizinhos se da esquerda maior que da direita
 		public Word[] pc = new Word[] {
-				new Word(Opcode.LDI, 0, -1, 3), // 0 carrega o valor 3 no r0
-				new Word(Opcode.STD, 0, -1, 700), // 1 carrega o valor do r0 na posição 700 da memória
-				new Word(Opcode.LDI, 0, -1, 5), // 2 carrega o valor 5 no r0
-				new Word(Opcode.STD, 0, -1, 701), // 3 carrega o valor do r0 na posição 701 da memória
-				new Word(Opcode.LDI, 0, -1, 1), // 4 carrega o valor 1 no r0
-				new Word(Opcode.STD, 0, -1, 702), // 5 carrega o valor do r0 na posição 702 da memória
-				new Word(Opcode.LDI, 0, -1, 100), // 6 carrega o valor 100 no r0
-				new Word(Opcode.STD, 0, -1, 703), // 1 carrega o valor do r0 na posição 703 da memória
-				new Word(Opcode.LDI, 0, -1, 8), // 0 carrega o valor 8 no r0
-				new Word(Opcode.STD, 0, -1, 704), // 1 carrega o valor do r0 na posição 704 da memória
-				new Word(Opcode.LDI, 0, -1, 74), // 0 carrega o valor 74 no r0
-				new Word(Opcode.STD, 0, -1, 705), // 1 carrega o valor do r0 na posição 705 da memória
-				new Word(Opcode.LDI, 0, -1, 0), // 0 carrega o valor 0 no r0
-				new Word(Opcode.STD, 0, -1, 706), // 1 carrega o valor do r0 na posição 706 da memória
+				// new Word(Opcode.LDI, 0, -1, 9), 	// r0 = 3
+				// new Word(Opcode.STD, 0, -1, 700),	// 700 = 3
+				// new Word(Opcode.LDI, 0, -1, 8), 	// r0 = 2
+				// new Word(Opcode.STD, 0, -1, 701),	// 701 = 2 	
+				// new Word(Opcode.LDI, 0, -1, 7), 	// r0 = 1
+				// new Word(Opcode.STD, 0, -1, 702),	// 700 = 1
+
+				// new Word(Opcode.LDI, 1, -1, 700), // usa pra "andar" no vetor 
+				// new Word(Opcode.LDX, 2, 1, -1), // carrega o valor que tá na posição de memória (700 - r1)
+				// new Word(Opcode.ADDI, 1, -1, 1), // soma 1 no r1 (posição de memória)
+				// new Word(Opcode.LDX, 3, 1, -1), 
+				// //verifica dif
+				// new Word(Opcode.SUB, 2, 3, -1), // 9-8 > 0 r2=1
+				// new Word(Opcode.JMPIL, x, 2, -1) // se o que tem no r2 for menor que 0, pula pra x, se não, segue o fluxo 
+				// new Word(Opcode.SWAP, )
+
 		};
 	}
 }
