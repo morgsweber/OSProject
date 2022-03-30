@@ -43,7 +43,7 @@ public class Sistema {
 		LDI, LDD, STD, LDX, STX, SWAP; // movimentacao
 	}
 
-	public enum Interruptions{
+	public enum Interruptions {
 		OverFlow, EnderecoInvalido, InstrucaoInvalida, SemInterrupcao;
 	}
 
@@ -63,16 +63,16 @@ public class Sistema {
 			interrupcao = Interruptions.SemInterrupcao;
 		}
 
-		public boolean trataInterruptOverflow(int valor){
-			if(valor >  Integer.MIN_VALUE && valor < Integer.MAX_VALUE){
+		public boolean trataInterruptOverflow(int valor) {
+			if (valor > Integer.MIN_VALUE && valor < Integer.MAX_VALUE) {
 				return true;
 			}
 			interrupcao = Interruptions.OverFlow;
 			return false;
 		}
 
-		public boolean trataInterruptEndInv(int endereco){
-			if(endereco >= 0 && endereco < m.length){
+		public boolean trataInterruptEndInv(int endereco) {
+			if (endereco >= 0 && endereco < m.length) {
 				return true;
 			}
 			interrupcao = Interruptions.EnderecoInvalido;
@@ -112,8 +112,8 @@ public class Sistema {
 							// setado
 			while (true) { // ciclo de instrucoes. acaba cfe instrucao, veja cada caso.
 
-				if(interrupcao != Interruptions.SemInterrupcao){
-					switch (interrupcao){
+				if (interrupcao != Interruptions.SemInterrupcao) {
+					switch (interrupcao) {
 						case OverFlow:
 							System.out.println("----------Interrupção do tipo: Overflow----------");
 							break;
@@ -133,15 +133,15 @@ public class Sistema {
 				// EXECUTA INSTRUCAO NO ir
 				switch (ir.opc) { // para cada opcode, sua execução
 
-					/***********Instruções JUMP***********/
-					case JMP: // PC ← k										Dotti
-						if(trataInterruptEndInv(ir.p)) {
+					/*********** Instruções JUMP ***********/
+					case JMP: // PC ← k Dotti
+						if (trataInterruptEndInv(ir.p)) {
 							pc = ir.p;
 						}
 						break;
 
-					case JMPIG: // If Rc > 0 Then PC ← Rs Else PC ← PC +1	Dotti
-						if(trataInterruptEndInv(reg[ir.r1])) {
+					case JMPIG: // If Rc > 0 Then PC ← Rs Else PC ← PC +1 Dotti
+						if (trataInterruptEndInv(reg[ir.r1])) {
 							if (reg[ir.r2] > 0) {
 								pc = reg[ir.r1];
 							} else {
@@ -150,8 +150,8 @@ public class Sistema {
 						}
 						break;
 
-					case JMPIE: // If Rc = 0 Then PC ← Rs Else PC ← PC +1	Dotti
-						if(trataInterruptEndInv(reg[ir.r1])) {
+					case JMPIE: // If Rc = 0 Then PC ← Rs Else PC ← PC +1 Dotti
+						if (trataInterruptEndInv(reg[ir.r1])) {
 							if (reg[ir.r2] == 0) {
 								pc = reg[ir.r1];
 							} else {
@@ -160,17 +160,17 @@ public class Sistema {
 						}
 						break;
 
-					case STOP: // por enquanto, para execucao				Dotti
+					case STOP: // por enquanto, para execucao Dotti
 						break;
 
 					case JMPI: // PC ← Rs
-						if(trataInterruptEndInv(reg[ir.r1])) {
+						if (trataInterruptEndInv(reg[ir.r1])) {
 							pc = reg[ir.r1];
 						}
 						break;
 
 					case JMPIL: // Rc < 0 then PC ← Rs else PC ← PC +1
-						if(trataInterruptEndInv(reg[ir.r1])) {
+						if (trataInterruptEndInv(reg[ir.r1])) {
 							if (reg[ir.r2] < 0) {
 								pc = reg[ir.r1];
 							} else {
@@ -180,13 +180,13 @@ public class Sistema {
 						break;
 
 					case JMPIM: // PC ← [A]
-						if(trataInterruptEndInv(ir.p)) {
+						if (trataInterruptEndInv(ir.p)) {
 							pc = m[ir.p].p; // ?? ou Opcode.DATA???
 						}
 						break;
 
 					case JMPIGM: // if Rc > 0 then PC ← [A] else PC ← PC +1
-						if(trataInterruptEndInv(ir.p)) {
+						if (trataInterruptEndInv(ir.p)) {
 							if (reg[ir.r2] > 0) {
 								pc = m[ir.p].p;
 							} else {
@@ -196,7 +196,7 @@ public class Sistema {
 						break;
 
 					case JMPILM: // if Rc < 0 then PC ← [A] else PC ← PC +1
-						if(trataInterruptEndInv(ir.p)){
+						if (trataInterruptEndInv(ir.p)) {
 							if (reg[ir.r2] < 0) {
 								pc = m[ir.p].p;
 							} else {
@@ -206,7 +206,7 @@ public class Sistema {
 						break;
 
 					case JMPIEM: // if Rc = 0 then PC ← [A] else PC ← PC +1
-						if(trataInterruptEndInv(ir.p)){
+						if (trataInterruptEndInv(ir.p)) {
 							if (reg[ir.r2] == 0) {
 								pc = m[ir.p].p;
 							} else {
@@ -215,74 +215,79 @@ public class Sistema {
 						}
 						break;
 
-					/**********Instruções aritméticas***********/
+					/********** Instruções aritméticas ***********/
 					case ADD: // Rd ← Rd + Rs
-						if(trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(reg[ir.r2]) && trataInterruptOverflow(reg[ir.r1]+reg[ir.r2])) {
+						if (trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(reg[ir.r2])
+								&& trataInterruptOverflow(reg[ir.r1] + reg[ir.r2])) {
 							reg[ir.r1] = reg[ir.r1] + reg[ir.r2];
 							pc++;
 						}
 						break;
 
-					case MULT: // Rd ← Rd * Rs							Dotti
-						if(trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(reg[ir.r2]) && trataInterruptOverflow(reg[ir.r1] * reg[ir.r2])) {
+					case MULT: // Rd ← Rd * Rs Dotti
+						if (trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(reg[ir.r2])
+								&& trataInterruptOverflow(reg[ir.r1] * reg[ir.r2])) {
 							reg[ir.r1] = reg[ir.r1] * reg[ir.r2];
 							pc++;
 						}
 						break;
 
-					case ADDI: // Rd ← Rd + k							Dotti
-						if(trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(ir.p) && trataInterruptOverflow(reg[ir.r1] + ir.p)){
+					case ADDI: // Rd ← Rd + k Dotti
+						if (trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(ir.p)
+								&& trataInterruptOverflow(reg[ir.r1] + ir.p)) {
 							reg[ir.r1] = reg[ir.r1] + ir.p;
 							pc++;
 						}
 						break;
 
-					case SUB: // Rd ← Rd - Rs							Dotti
-						if(trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(reg[ir.r2]) && trataInterruptOverflow(reg[ir.r1]-reg[ir.r2])) {
+					case SUB: // Rd ← Rd - Rs Dotti
+						if (trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(reg[ir.r2])
+								&& trataInterruptOverflow(reg[ir.r1] - reg[ir.r2])) {
 							reg[ir.r1] = reg[ir.r1] - reg[ir.r2];
 							pc++;
 						}
 						break;
 
 					case SUBI: // Rd ← Rd – k
-						if(trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(ir.p) && trataInterruptOverflow(reg[ir.r1] - ir.p)) {
+						if (trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(ir.p)
+								&& trataInterruptOverflow(reg[ir.r1] - ir.p)) {
 							reg[ir.r1] = reg[ir.r1] - ir.p;
 							pc++;
 						}
 						break;
 
-					/***********Instruções de movimentação***********/
+					/*********** Instruções de movimentação ***********/
 					case LDD: // Rd ← [A]
-						if(trataInterruptEndInv(ir.p) && trataInterruptOverflow(m[ir.p].p)) {
+						if (trataInterruptEndInv(ir.p) && trataInterruptOverflow(m[ir.p].p)) {
 							reg[ir.r1] = m[ir.p].p;
 							pc++;
 						}
 						break;
 
 					case LDX: // Rd ← [Rs]
-						if(trataInterruptEndInv(reg[ir.r2]) && trataInterruptOverflow(reg[ir.r1])) {
+						if (trataInterruptEndInv(reg[ir.r2]) && trataInterruptOverflow(reg[ir.r1])) {
 							reg[ir.r1] = m[reg[ir.r2]].p;
 							pc++;
 						}
 						break;
 
-					case STX: // [Rd] ←Rs							Dotti
-						if(trataInterruptEndInv(reg[ir.r1]) && trataInterruptOverflow(reg[ir.r2])) {
+					case STX: // [Rd] ←Rs Dotti
+						if (trataInterruptEndInv(reg[ir.r1]) && trataInterruptOverflow(reg[ir.r2])) {
 							m[reg[ir.r1]].opc = Opcode.DATA;
 							m[reg[ir.r1]].p = reg[ir.r2];
 							pc++;
 						}
 						break;
 
-					case LDI: // Rd ← k								Dotti
-						if(trataInterruptOverflow(ir.p)) {
+					case LDI: // Rd ← k Dotti
+						if (trataInterruptOverflow(ir.p)) {
 							reg[ir.r1] = ir.p;
 							pc++;
 						}
 						break;
 
-					case STD: // [A] ← Rs							Dotti
-						if(trataInterruptEndInv(ir.p) && trataInterruptOverflow(m[ir.p].p)) {
+					case STD: // [A] ← Rs Dotti
+						if (trataInterruptEndInv(ir.p) && trataInterruptOverflow(m[ir.p].p)) {
 							m[ir.p].opc = Opcode.DATA;
 							m[ir.p].p = reg[ir.r1];
 							pc++;
@@ -309,6 +314,13 @@ public class Sistema {
 
 					// if int ligada - vai para tratamento da int
 					// desviar para rotina java que trata int
+				}
+
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		}
@@ -412,6 +424,7 @@ public class Sistema {
 		monitor.executa();
 		System.out.println("---------------------------------- após execucao ");
 		monitor.dump(vm.m, 0, programa.length);
+
 	}
 
 	// ------------------- S I S T E M A - fim
@@ -425,7 +438,7 @@ public class Sistema {
 		s.roda(progs.pa); // "progs" significa acesso/referencia ao programa em memoria secundaria
 		// s.roda(progs.progMinimo);
 		// s.roda(progs.fatorial);
-		//s.roda(progs.pb);
+		// s.roda(progs.pb);
 	}
 	// -------------------------------------------------------------------------------------------------------
 	// --------------- TUDO ABAIXO DE MAIN É AUXILIAR PARA FUNCIONAMENTO DO SISTEMA
@@ -495,81 +508,88 @@ public class Sistema {
 				new Word(Opcode.DATA, -1, -1, -1)
 		}; // 10 ao final o valor do fatorial estará na posição 10 da memória
 
-		/***********Programas implementados***********/
-		// PA: um programa que le um valor de uma determinada posição (carregada no inicio),
- 		// se o número for menor que zero coloca -1 no início da posição de memória para saída; 
- 		// se for maior que zero este é o número de valores da sequencia de fibonacci a 
- 		// serem escritos em sequencia a partir de uma posição de memória;
-		public Word[] pa = new Word[] 
-		{
-			new Word(Opcode.LDI, 0, -1, 5), 		// 0 carrega o valor 5 no registrador 0
-			new Word(Opcode.STD, 0, -1, 37), 		//1 pega o valor do r0 e coloca na posição 37 da memória
-			new Word(Opcode.LDD, 1, -1, 37), 		//2 pega o valor da posição 37 da memória e coloca em r1
-			new Word(Opcode.SUBI, 1, -1, 1), 		//3 subtrai 1 do valor que entrou (no caso 5), por conta do zero: 0-4 (5 valores)
-			new Word(Opcode.LDI, 2, -1, 900), 		//4 registrador que vai controlar o incremento de posição de memória
-			new Word(Opcode.JMPILM, -1, 1, 21), 	//5 verifica se o valor no r1 é menor que 0, se sim, pula p/ instrução 23, se não, segue o fluxo
-			new Word(Opcode.LDI, 5, -1, 1), 		//6 carrega o primeiro valor de Fibonacci (1) no r5 
-			new Word(Opcode.STX, 2, 5, -1), 		//7 pega o valor do r5 e carrega na posição 900 (valor armazenado no r2)
-			new Word(Opcode.SUBI, 1, -1, 1), 		//8 subtrai 1 dos valores do r1
-			new Word(Opcode.JMPILM, -1, 1, 23), 	//9 se o valor do r1 for menor que 0, pula para instrução 23
-			new Word(Opcode.ADDI, 2, -1, 1), 		//10 soma 1 ao valor que está no r2 (posição de memória)
-			new Word(Opcode.LDI, 6, -1, 1), 		//11 carrega o segundo valor de Fibonacci (1) no r6
-			new Word(Opcode.STX, 2, 6, -1), 		//12 carrega o valor de r6 na próxima posição da memória (r2)
-			new Word(Opcode.SUBI, 1, -1, 1), 		//13 subtrai 1 do r1
-			new Word(Opcode.JMPILM, -1, 1, 23), 	//14 se r1 menor do que 0, pula para instrução 23
-			new Word(Opcode.ADDI, 2, -1, 1), 		//15 soma 1 na posição de memória
-			new Word(Opcode.ADD, 5, 6, -1),			//16 soma os valores de r5 e r6
-			new Word(Opcode.SWAP, 5, 6, -1),		//17 faz um swap dos registradores r5 e r6 para manter a ordem correta para somar
-			new Word(Opcode.STX, 2, 6, -1),			//18 carrega o valor de r6 (soma) para memória
-			new Word(Opcode.JMPIGM, -1, 1, 13),		//19 se o que tem no r1 é maior que 0, volta pra instrução 13, se não, segue
-			new Word(Opcode.JMP, -1, -1, 23),		//20 pula pro stop
-			new Word(Opcode.LDI, 3, -1, -1),		//21 carrega -1 no r3		
-			new Word(Opcode.STX, 2, 3, -1), 		//22 pega o que tá no r3 (-1) e coloca na posição de memória do r2 (900)
-			new Word(Opcode.STOP, -1, -1, -1)		//23 para o programa
+		/*********** Programas implementados ***********/
+		// PA: um programa que le um valor de uma determinada posição (carregada no
+		// inicio),
+		// se o número for menor que zero coloca -1 no início da posição de memória para
+		// saída;
+		// se for maior que zero este é o número de valores da sequencia de fibonacci a
+		// serem escritos em sequencia a partir de uma posição de memória;
+		public Word[] pa = new Word[] {
+				new Word(Opcode.LDI, 0, -1, 5), // 0 carrega o valor 5 no registrador 0
+				new Word(Opcode.STD, 0, -1, 37), // 1 pega o valor do r0 e coloca na posição 37 da memória
+				new Word(Opcode.LDD, 1, -1, 37), // 2 pega o valor da posição 37 da memória e coloca em r1
+				new Word(Opcode.SUBI, 1, -1, 1), // 3 subtrai 1 do valor que entrou (no caso 5), por conta do zero: 0-4
+													// (5 valores)
+				new Word(Opcode.LDI, 2, -1, 900), // 4 registrador que vai controlar o incremento de posição de memória
+				new Word(Opcode.JMPILM, -1, 1, 21), // 5 verifica se o valor no r1 é menor que 0, se sim, pula p/
+													// instrução 23, se não, segue o fluxo
+				new Word(Opcode.LDI, 5, -1, 1), // 6 carrega o primeiro valor de Fibonacci (1) no r5
+				new Word(Opcode.STX, 2, 5, -1), // 7 pega o valor do r5 e carrega na posição 900 (valor armazenado no
+												// r2)
+				new Word(Opcode.SUBI, 1, -1, 1), // 8 subtrai 1 dos valores do r1
+				new Word(Opcode.JMPILM, -1, 1, 23), // 9 se o valor do r1 for menor que 0, pula para instrução 23
+				new Word(Opcode.ADDI, 2, -1, 1), // 10 soma 1 ao valor que está no r2 (posição de memória)
+				new Word(Opcode.LDI, 6, -1, 1), // 11 carrega o segundo valor de Fibonacci (1) no r6
+				new Word(Opcode.STX, 2, 6, -1), // 12 carrega o valor de r6 na próxima posição da memória (r2)
+				new Word(Opcode.SUBI, 1, -1, 1), // 13 subtrai 1 do r1
+				new Word(Opcode.JMPILM, -1, 1, 23), // 14 se r1 menor do que 0, pula para instrução 23
+				new Word(Opcode.ADDI, 2, -1, 1), // 15 soma 1 na posição de memória
+				new Word(Opcode.ADD, 5, 6, -1), // 16 soma os valores de r5 e r6
+				new Word(Opcode.SWAP, 5, 6, -1), // 17 faz um swap dos registradores r5 e r6 para manter a ordem correta
+													// para somar
+				new Word(Opcode.STX, 2, 6, -1), // 18 carrega o valor de r6 (soma) para memória
+				new Word(Opcode.JMPIGM, -1, 1, 13), // 19 se o que tem no r1 é maior que 0, volta pra instrução 13, se
+													// não, segue
+				new Word(Opcode.JMP, -1, -1, 23), // 20 pula pro stop
+				new Word(Opcode.LDI, 3, -1, -1), // 21 carrega -1 no r3
+				new Word(Opcode.STX, 2, 3, -1), // 22 pega o que tá no r3 (-1) e coloca na posição de memória do r2
+												// (900)
+				new Word(Opcode.STOP, -1, -1, -1), // 23 para o programa
+				new Word(Opcode.DATA, -1, -1, -1)
 		};
 
-		// PB: dado um inteiro em alguma posição de memória, 
- 		// se for negativo armazena -1 na saída; se for positivo responde o fatorial do número na saída
-		public Word[] pb = new Word[]
-		{
-			new Word(Opcode.LDI, 0, -1, 3), 		//0 carrega o valor 3 no r0
-			new Word(Opcode.STD, 0, -1, 36), 		//1 carrega o valor do r0 na posição 36 da memória
-			new Word(Opcode.LDD, 1, -1, 36),		//2 pega o valor da posição 36 da memória e coloca em r1
-			new Word(Opcode.JMPILM, -1, 1, 11),		//3 se for negativo, pula pra instrução 11
-			new Word(Opcode.LDD, 2, -1, 36),		//4 carrega em r2 o mesmo valor de r1
-			new Word(Opcode.SUB, 1, -1, 1),			//5 subtrai 1 do valor que tinha em r1
-			new Word(Opcode.MULT, 2, 2, -1),		//6 multiplica r1 e r2 e coloca em r2 o valor 
-			new Word(Opcode.SUB, 1, -1, 1),			//7 subtrai 1 do r1
-			new Word(Opcode.JMPIGM, -1, 1, 6),		//8 se for maior que 0, volta pra instrução 6 se não, segue o fluxo
-			new Word(Opcode.STD, 2, -1, 35),		//9 coloca na posição 35 da memória o resultado do fatorial
-			new Word(Opcode.JMP, -1, -1, 13),		//10 pula pro stop
-			new Word(Opcode.LDI, 1, -1, -1),		//11 carrega no r1 o valor -1
-			new Word(Opcode.STD, 1, -1, 35),		//12 coloca na posição 35 da memória o valor -1
-			new Word(Opcode.STOP, -1, -1, -1)		//13 termina a execução
+		// PB: dado um inteiro em alguma posição de memória,
+		// se for negativo armazena -1 na saída; se for positivo responde o fatorial do
+		// número na saída
+		public Word[] pb = new Word[] {
+				new Word(Opcode.LDI, 0, -1, 3), // 0 carrega o valor 3 no r0
+				new Word(Opcode.STD, 0, -1, 36), // 1 carrega o valor do r0 na posição 36 da memória
+				new Word(Opcode.LDD, 1, -1, 36), // 2 pega o valor da posição 36 da memória e coloca em r1
+				new Word(Opcode.JMPILM, -1, 1, 11), // 3 se for negativo, pula pra instrução 11
+				new Word(Opcode.LDD, 2, -1, 36), // 4 carrega em r2 o mesmo valor de r1
+				new Word(Opcode.SUB, 1, -1, 1), // 5 subtrai 1 do valor que tinha em r1
+				new Word(Opcode.MULT, 2, 2, -1), // 6 multiplica r1 e r2 e coloca em r2 o valor
+				new Word(Opcode.SUB, 1, -1, 1), // 7 subtrai 1 do r1
+				new Word(Opcode.JMPIGM, -1, 1, 6), // 8 se for maior que 0, volta pra instrução 6 se não, segue o fluxo
+				new Word(Opcode.STD, 2, -1, 35), // 9 coloca na posição 35 da memória o resultado do fatorial
+				new Word(Opcode.JMP, -1, -1, 13), // 10 pula pro stop
+				new Word(Opcode.LDI, 1, -1, -1), // 11 carrega no r1 o valor -1
+				new Word(Opcode.STD, 1, -1, 35), // 12 coloca na posição 35 da memória o valor -1
+				new Word(Opcode.STOP, -1, -1, -1) // 13 termina a execução
 		};
 
 		// PC: para um N definido (10 por exemplo)
 		// o programa ordena um vetor de N números em alguma posição de memória;
 		// ordena usando bubble sort
 		// loop ate que não swap nada
-		// passando pelos N valores 
+		// passando pelos N valores
 		// faz swap de vizinhos se da esquerda maior que da direita
-		public Word[] pc = new Word[]
-		{
-			new Word(Opcode.LDI, 0, -1, 3), 		//0 carrega o valor 3 no r0
-			new Word(Opcode.STD, 0, -1, 700), 		//1 carrega o valor do r0 na posição 700 da memória
-			new Word(Opcode.LDI, 0, -1, 5), 		//2 carrega o valor 5 no r0
-			new Word(Opcode.STD, 0, -1, 701), 		//3 carrega o valor do r0 na posição 701 da memória
-			new Word(Opcode.LDI, 0, -1, 1), 		//4 carrega o valor 1 no r0
-			new Word(Opcode.STD, 0, -1, 702), 		//5 carrega o valor do r0 na posição 702 da memória
-			new Word(Opcode.LDI, 0, -1, 100), 		//6 carrega o valor 100 no r0
-			new Word(Opcode.STD, 0, -1, 703), 		//1 carrega o valor do r0 na posição 703 da memória
-			new Word(Opcode.LDI, 0, -1, 8), 		//0 carrega o valor 8 no r0
-			new Word(Opcode.STD, 0, -1, 704), 		//1 carrega o valor do r0 na posição 704 da memória
-			new Word(Opcode.LDI, 0, -1, 74), 		//0 carrega o valor 74 no r0
-			new Word(Opcode.STD, 0, -1, 705), 		//1 carrega o valor do r0 na posição 705 da memória
-			new Word(Opcode.LDI, 0, -1, 0), 		//0 carrega o valor 0 no r0
-			new Word(Opcode.STD, 0, -1, 706), 		//1 carrega o valor do r0 na posição 706 da memória
+		public Word[] pc = new Word[] {
+				new Word(Opcode.LDI, 0, -1, 3), // 0 carrega o valor 3 no r0
+				new Word(Opcode.STD, 0, -1, 700), // 1 carrega o valor do r0 na posição 700 da memória
+				new Word(Opcode.LDI, 0, -1, 5), // 2 carrega o valor 5 no r0
+				new Word(Opcode.STD, 0, -1, 701), // 3 carrega o valor do r0 na posição 701 da memória
+				new Word(Opcode.LDI, 0, -1, 1), // 4 carrega o valor 1 no r0
+				new Word(Opcode.STD, 0, -1, 702), // 5 carrega o valor do r0 na posição 702 da memória
+				new Word(Opcode.LDI, 0, -1, 100), // 6 carrega o valor 100 no r0
+				new Word(Opcode.STD, 0, -1, 703), // 1 carrega o valor do r0 na posição 703 da memória
+				new Word(Opcode.LDI, 0, -1, 8), // 0 carrega o valor 8 no r0
+				new Word(Opcode.STD, 0, -1, 704), // 1 carrega o valor do r0 na posição 704 da memória
+				new Word(Opcode.LDI, 0, -1, 74), // 0 carrega o valor 74 no r0
+				new Word(Opcode.STD, 0, -1, 705), // 1 carrega o valor do r0 na posição 705 da memória
+				new Word(Opcode.LDI, 0, -1, 0), // 0 carrega o valor 0 no r0
+				new Word(Opcode.STD, 0, -1, 706), // 1 carrega o valor do r0 na posição 706 da memória
 
 		};
 	}
