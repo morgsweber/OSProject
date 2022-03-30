@@ -12,8 +12,7 @@ Caso queira editar o código e trabalhar nele, é necessário um editor de códi
 ou outro.
 
 Para executar o código, deve ser executado o método _main()_ do arquivo de código _Sistema.java_.
-Com isso, antes de colocar para executar, deve ser escolhido o programa que quer que seja executado, removendo o comentário
-relativo a ele.
+Com isso, antes de colocar para executar, deve ser escolhido o programa que quer que seja executado, removendo o comentário relativo a ele.
 
 ````
 public static void main(String args[]) {
@@ -26,4 +25,13 @@ public static void main(String args[]) {
 
 **Seção Programas:**
 
-foram
+Das entregas solicitadas foram implementados:
+1. todas as instruções 
+2. PA
+3. PB
+4. uma parte do PC (não está funcionando por completo)
+5. interrupções de overflow, instrução inválida, endereço inválido e chamada de sistema 
+6. foram criados testes para cada uma das interrupções 
+
+**Seção Saídas:**
+
