@@ -127,16 +127,14 @@ public class Sistema {
 						case ChamadaDeSistema:
 							//lê do teclado
 							Scanner in = new Scanner(System.in);
-							System.out.println("chamada de sistema");
+
 							if (reg[8]==1){
 								int destino = reg[9];
 								System.out.println("Insira um número inteiro: ");
 								int value = in.nextInt();
 								m[destino].p = value;
 							}
-							System.out.println(reg[8] +" R8888");
 							if (reg[8]==2){
-								System.out.println("2");
 								int ec = reg[9];
 								System.out.println("Retorno: " + m[ec].p);
 							}
@@ -469,7 +467,7 @@ public class Sistema {
 	public static void main(String args[]) {
 		Sistema s = new Sistema();
 		// "progs" significa acesso/referencia ao programa em memoria secundaria
-		s.roda(progs.pa);
+		//s.roda(progs.pa);
 		//s.roda(progs.testePA);
 		//s.roda(progs.pb);
 		//s.roda(progs.testePB);
@@ -480,7 +478,7 @@ public class Sistema {
 		//s.roda(progs.testaIn);
 		//s.roda(progs.testaOut);
 		//s.roda(progs.paInput);
-		//s.roda(progs.pbOutput);
+		s.roda(progs.pbOutput);
 
 	}
 
@@ -772,13 +770,13 @@ public class Sistema {
 		};
 
 		public Word[] testaOut = new Word[]{
-			new Word(Opcode.LDI, 1, -1, 77),    // 0 
-            new Word(Opcode.STD, 1, -1, 5),     // 1 
+			new Word(Opcode.LDI, 1, -1, 23),    // 0 
+            new Word(Opcode.STD, 1, -1, 6),     // 1 
             new Word(Opcode.LDI, 8, -1, 2),     // 2
-            new Word(Opcode.LDI, 9, -1, 5),     // 3
+            new Word(Opcode.LDI, 9, -1, 6),     // 3
             new Word(Opcode.TRAP, -1, -1, -1),  // 4
             new Word(Opcode.STOP, -1, -1, -1),	// 5
-			new Word(Opcode.DATA, -1, -1, -1),	//6
+			new Word(Opcode.DATA, -1, -1, -1)
 		};
 
 		public Word[] paInput = new Word[] {
