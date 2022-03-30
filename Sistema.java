@@ -580,21 +580,56 @@ public class Sistema {
 		// passando pelos N valores
 		// faz swap de vizinhos se da esquerda maior que da direita
 		public Word[] pc = new Word[] {
-				// new Word(Opcode.LDI, 0, -1, 9), 	// r0 = 3
-				// new Word(Opcode.STD, 0, -1, 700),	// 700 = 3
-				// new Word(Opcode.LDI, 0, -1, 8), 	// r0 = 2
-				// new Word(Opcode.STD, 0, -1, 701),	// 701 = 2 	
-				// new Word(Opcode.LDI, 0, -1, 7), 	// r0 = 1
-				// new Word(Opcode.STD, 0, -1, 702),	// 700 = 1
+				new Word(Opcode.LDI, 0, -1, 9), 	// r0 = 3
+				new Word(Opcode.STD, 0, -1, 700),	// 700 = 3
+				new Word(Opcode.LDI, 0, -1, 8), 	// r0 = 2
+				new Word(Opcode.STD, 0, -1, 701),	// 701 = 2
+				new Word(Opcode.LDI, 0, -1, 7), 	// r0 = 1
+				new Word(Opcode.STD, 0, -1, 702),	// 700 = 1
 
-				// new Word(Opcode.LDI, 1, -1, 700), // usa pra "andar" no vetor 
-				// new Word(Opcode.LDX, 2, 1, -1), // carrega o valor que tá na posição de memória (700 - r1)
-				// new Word(Opcode.ADDI, 1, -1, 1), // soma 1 no r1 (posição de memória)
-				// new Word(Opcode.LDX, 3, 1, -1), 
-				// //verifica dif
-				// new Word(Opcode.SUB, 2, 3, -1), // 9-8 > 0 r2=1
-				// new Word(Opcode.JMPIL, x, 2, -1) // se o que tem no r2 for menor que 0, pula pra x, se não, segue o fluxo 
-				// new Word(Opcode.SWAP, )
+				new Word(Opcode.LDI, 1, -1, 700), // usa pra "andar" no vetor
+				new Word(Opcode.LDX, 2, 1, -1), // carrega o valor que tá na posição de memória (700 - r1)
+				new Word(Opcode.ADDI, 1, -1, 1), // soma 1 no r1 (posição de memória)
+				new Word(Opcode.LDX, 3, 1, -1),
+				//verifica dif
+				new Word(Opcode.SUB, 2, 3, -1), // 9-8 > 0 r2=1
+				new Word(Opcode.JMPIL, x, 2, -1) // se o que tem no r2 for menor que 0, pula pra x, se não, segue o fluxo
+				new Word(Opcode.SWAP, )
+
+
+				/*new Word(Opcode.LDI, 0, -1, 9), 	// r0 = 9
+				new Word(Opcode.STD, 0, -1, 700),	// 700 = 9
+				new Word(Opcode.LDI, 0, -1, 8), 	// r0 = 8
+				new Word(Opcode.STD, 0, -1, 701),	// 701 = 8
+				new Word(Opcode.LDI, 0, -1, 7), 	// r0 = 7
+				new Word(Opcode.STD, 0, -1, 702),	// 702 = 7
+				new Word(Opcode.LDI, 7, -1, 702),	//r7 guarda valor da ultima memoria usada
+				new Word(Opcode.LDI, 6, -1, 0),
+
+				new Word(Opcode.LDI, 1, -1, 700), // usa pra "andar" no vetor
+				new Word(Opcode.LDX, 2, 1, -1), // carrega o valor que tá na posição de memória (700 - r1)
+				new Word(Opcode.LDX, 3, 1, -1),
+				new Word(Opcode.ADDI, 1, -1, 1), // soma 1 no r1 (posição de memória)
+				new Word(Opcode.LDX, 4, 1, -1),
+				//verifica dif
+				new Word(Opcode.SUB, 3, 4, -1), // 9-8 > 0 r3=1
+				 new Word(Opcode.JMPIL, x, 3, -1), // se o que tem no r2 for menor que 0, pula pra x, se não, segue o fluxo
+				new Word(Opcode.SWAP, 2, 4, -1), //troca os valores do r2 e do r4 de lugar
+				 new Word(Opcode.ADDI, 6, -1, 1),
+				new Word(Opcode.STX, 1, 4, -1),
+				 new Word(Opcode.SUBI, 1, -1, 1),
+				new Word(Opcode.STX, 1, 2, -1),
+
+
+				new Word(Opcode.ADDI, 1, -1, 1),
+				new Word(Opcode.LDX, 2, 1, -1),
+				new Word(Opcode.LDX, 3, 1, -1),
+				new Word(Opcode.ADDI, 1, -1, 1),
+				new Word(Opcode.SUB, 7, 1, -1),
+				new Word(Opcode.JMPIL, 7, x, -1), // se o que esta armazenado no r7 for menor que 0 pula para x (STOP), se não continua normal
+				new Word(Opcode.LDX, 4, 1, -1),
+				new Word(Opcode.JMPIG, x, 6, -1), //se o que esta no r6 for maior q 0 volta para o inicio da funcao*/
+
 
 		};
 	}
