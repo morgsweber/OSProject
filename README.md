@@ -21,8 +21,6 @@ public static void main(String args[]) {
 		s.roda(progs.pa);     //executa PA
 		//s.roda(progs.pb);   //executa PB
 		//s.roda(progs.pc);  // executa PC
-		// s.roda(progs.progMinimo);
-		// s.roda(progs.fatorial);
 }
 ````
 

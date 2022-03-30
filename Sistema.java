@@ -463,9 +463,10 @@ public class Sistema {
 	// ------------------- instancia e testa sistema
 	public static void main(String args[]) {
 		Sistema s = new Sistema();
-		s.roda(progs.pa); // "progs" significa acesso/referencia ao programa em memoria secundaria
+		//s.roda(progs.pa); // "progs" significa acesso/referencia ao programa em memoria secundaria
 		//s.roda(progs.pb);
 		//s.roda(progs.pc);
+		s.roda(progs.testePA);
 	}
 
 	// -------------------------------------------------------------------------------------------------------
@@ -549,24 +550,25 @@ public class Sistema {
 				new Word(Opcode.LDD, 1, -1, 37), 	// 2 pega o valor da posição 37 da memória e coloca em r1
 				new Word(Opcode.SUBI, 1, -1, 1), 	// 3 subtrai 1 do valor que entrou (no caso 5), por conta do zero: 0-4 (5 valores)
 				new Word(Opcode.LDI, 2, -1, 900), 	// 4 registrador que vai controlar o incremento de posição de memória
-				new Word(Opcode.LDI, 7, -1, 25),	// 5 carrega o valor 25 no registrador 7
-				new Word(Opcode.JMPIL, 7, 1, -1), 	// 6 verifica se o valor no r1 é menor que 0, se sim, pula p/ instrução 25, guardada no r7, se não, segue o fluxo
+				new Word(Opcode.LDI, 7, -1, 24),	// 5 carrega o valor 23 no registrador 7
+				new Word(Opcode.JMPIL, 7, 1, -1), 	// 6 verifica se o valor no r1 é menor que 0, se sim, pula p/ instrução 23, guardada no r7, se não, segue o fluxo
 				new Word(Opcode.LDI, 5, -1, 1), 	// 7 carrega o primeiro valor de Fibonacci (1) no r5
 				new Word(Opcode.STX, 2, 5, -1), 	// 8 pega o valor do r5 e carrega na posição 900 (valor armazenado no r2)
 				new Word(Opcode.SUBI, 1, -1, 1), 	// 9 subtrai 1 dos valores do r1
-				new Word(Opcode.JMPIL, 7, 1, -1), 	// 10 se o valor do r1 for menor que 0, pula para instrução 25
-				new Word(Opcode.ADDI, 2, -1, 1), 	// 11 soma 1 ao valor que está no r2 (posição de memória)
-				new Word(Opcode.LDI, 6, -1, 1), 	// 12 carrega o segundo valor de Fibonacci (1) no r6
-				new Word(Opcode.STX, 2, 6, -1), 	// 13 carrega o valor de r6 na próxima posição da memória (r2)
-				new Word(Opcode.SUBI, 1, -1, 1), 	// 14 subtrai 1 do r1
-				new Word(Opcode.JMPIL, 7, 1, -1), 	// 16 se r1 menor do que 0, pula para instrução 25
+				new Word(Opcode.LDI, 7, -1, 26),	//10 carrega o valor 26 no registrador 7
+				new Word(Opcode.JMPIL, 7, 1, -1), 	// 11 se o valor do r1 for menor que 0, pula para instrução 26
+				new Word(Opcode.ADDI, 2, -1, 1), 	// 12 soma 1 ao valor que está no r2 (posição de memória)
+				new Word(Opcode.LDI, 6, -1, 1), 	// 13 carrega o segundo valor de Fibonacci (1) no r6
+				new Word(Opcode.STX, 2, 6, -1), 	// 14 carrega o valor de r6 na próxima posição da memória (r2)
+				new Word(Opcode.SUBI, 1, -1, 1), 	// 15 subtrai 1 do r1
+				new Word(Opcode.JMPIL, 7, 1, -1), 	// 16 se r1 menor do que 0, pula para instrução 26
 				new Word(Opcode.ADDI, 2, -1, 1), 	// 17 soma 1 na posição de memória
 				new Word(Opcode.ADD, 5, 6, -1), 	// 18 soma os valores de r5 e r6
 				new Word(Opcode.SWAP, 5, 6, -1), 	// 19 faz um swap dos registradores r5 e r6 para manter a ordem correta para somar
 				new Word(Opcode.STX, 2, 6, -1), 	// 20 carrega o valor de r6 (soma) para memória
-				new Word(Opcode.LDI, 4, -1, 14), 	//21 carrega o valor 14 no registrador 4
-				new Word(Opcode.JMPIG, 4, 1, -1), 	// 22 se o que tem no r1 é maior que 0, volta pra instrução 14, se não, segue
-				new Word(Opcode.JMPIL, 7, 1, -1), 	// 23 se o que tem no r1 for menor que 0, pula pra instrução 26
+				new Word(Opcode.LDI, 4, -1, 15), 	//21carrega o valor 15 no registrador 4
+				new Word(Opcode.JMPIG, 4, 1, -1), 	// 22 se o que tem no r1 é maior que 0, volta pra instrução 15, se não, segue
+				new Word(Opcode.JMPIE, 7, 1, -1), 	// 23 se o que tem no r1 for igual a 0, pula pra instrução 26
 				new Word(Opcode.LDI, 3, -1, -1), 	// 24 carrega -1 no r3
 				new Word(Opcode.STX, 2, 3, -1), 	// 25 pega o que tá no r3 (-1) e coloca na posição de memória do r2 (900)
 				new Word(Opcode.STOP, -1, -1, -1),  // 26 para o programa
@@ -636,6 +638,39 @@ public class Sistema {
 			
 				new Word(Opcode.JMP, -1, -1, 7), 	//28
 		};
+
+
+		//teste PA que le valor menor que 0
+		public Word[] testePA = new Word[]{
+				new Word(Opcode.LDI, 0, -1, -2), 	// 0 carrega o valor -2 no registrador 0
+				new Word(Opcode.STD, 0, -1, 37), 	// 1 pega o valor do r0 e coloca na posição 37 da memória
+				new Word(Opcode.LDD, 1, -1, 37), 	// 2 pega o valor da posição 37 da memória e coloca em r1
+				new Word(Opcode.SUBI, 1, -1, 1), 	// 3 subtrai 1 do valor que entrou (no caso 5), por conta do zero: 0-4 (5 valores)
+				new Word(Opcode.LDI, 2, -1, 900), 	// 4 registrador que vai controlar o incremento de posição de memória
+				new Word(Opcode.LDI, 7, -1, 24),	// 5 carrega o valor 23 no registrador 7
+				new Word(Opcode.JMPIL, 7, 1, -1), 	// 6 verifica se o valor no r1 é menor que 0, se sim, pula p/ instrução 23, guardada no r7, se não, segue o fluxo
+				new Word(Opcode.LDI, 5, -1, 1), 	// 7 carrega o primeiro valor de Fibonacci (1) no r5
+				new Word(Opcode.STX, 2, 5, -1), 	// 8 pega o valor do r5 e carrega na posição 900 (valor armazenado no r2)
+				new Word(Opcode.SUBI, 1, -1, 1), 	// 9 subtrai 1 dos valores do r1
+				new Word(Opcode.LDI, 7, -1, 26),	//10 carrega o valor 26 no registrador 7
+				new Word(Opcode.JMPIL, 7, 1, -1), 	// 11 se o valor do r1 for menor que 0, pula para instrução 26
+				new Word(Opcode.ADDI, 2, -1, 1), 	// 12 soma 1 ao valor que está no r2 (posição de memória)
+				new Word(Opcode.LDI, 6, -1, 1), 	// 13 carrega o segundo valor de Fibonacci (1) no r6
+				new Word(Opcode.STX, 2, 6, -1), 	// 14 carrega o valor de r6 na próxima posição da memória (r2)
+				new Word(Opcode.SUBI, 1, -1, 1), 	// 15 subtrai 1 do r1
+				new Word(Opcode.JMPIL, 7, 1, -1), 	// 16 se r1 menor do que 0, pula para instrução 26
+				new Word(Opcode.ADDI, 2, -1, 1), 	// 17 soma 1 na posição de memória
+				new Word(Opcode.ADD, 5, 6, -1), 	// 18 soma os valores de r5 e r6
+				new Word(Opcode.SWAP, 5, 6, -1), 	// 19 faz um swap dos registradores r5 e r6 para manter a ordem correta para somar
+				new Word(Opcode.STX, 2, 6, -1), 	// 20 carrega o valor de r6 (soma) para memória
+				new Word(Opcode.LDI, 4, -1, 15), 	//21carrega o valor 15 no registrador 4
+				new Word(Opcode.JMPIG, 4, 1, -1), 	// 22 se o que tem no r1 é maior que 0, volta pra instrução 15, se não, segue
+				new Word(Opcode.JMPIE, 7, 1, -1), 	// 23 se o que tem no r1 for igual a 0, pula pra instrução 26
+				new Word(Opcode.LDI, 3, -1, -1), 	// 24 carrega -1 no r3
+				new Word(Opcode.STX, 2, 3, -1), 	// 25 pega o que tá no r3 (-1) e coloca na posição de memória do r2 (900)
+				new Word(Opcode.STOP, -1, -1, -1),  // 26 para o programa
+		};
+
 	}
 }
 
