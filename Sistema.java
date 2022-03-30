@@ -45,7 +45,7 @@ public class Sistema {
 	}
 
 	public enum Interruptions {
-		OverFlow, EnderecoInvalido, InstrucaoInvalida, SemInterrupcao;
+		OverFlow, EnderecoInvalido, InstrucaoInvalida, SemInterrupcao, ChamadaDeSistema;
 	}
 
 	public class CPU {
@@ -123,6 +123,22 @@ public class Sistema {
 							break;
 						case InstrucaoInvalida:
 							System.out.println("----------Interrupção do tipo: Instrução Inválida----------");
+							break;
+						case ChamadaDeSistema:
+							//lê do teclado
+							Scanner in = new Scanner(System.in);
+
+							if (reg[8]==1){
+								int destino = reg[9];
+								System.out.println("Insira um número inteiro: ");
+								int value = in.nextInt();
+								m[destino].p = value;
+							}
+		
+							if (reg[8]==2){
+								int ec = reg[9];
+								System.out.println("Retorno: " + m[ec].p);
+							}
 							break;
 					}
 					break;
@@ -309,7 +325,9 @@ public class Sistema {
 						pc++;
 						break;
 					case TRAP:
-						//le os registradores 8 e 9 
+						interrupcao = Interruptions.ChamadaDeSistema;
+						pc ++;
+						break; 
 
 					default:
 						// opcode desconhecido
