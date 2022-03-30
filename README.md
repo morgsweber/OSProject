@@ -1,36 +1,31 @@
 "# SisOpProject" 
 
+**Nome dos integrantes:**
+
+Gustavo G. Lottermann, Morgana Luiza Weber, Eduardo Berwanger
 
 
+**Seção Implementação:**
 
-TODO: 
-1 - implementar todos os conjuntos de instruções (faltam 11)
-    JMP - ok
-    JMPI -
-    JMPIG - ok
-    JMPIL -
-    JMPIE - ok 
-    JMPIM -
-    JMPIGM - 
-    JMPILM
-    JMPIEM
-    STOP - ok 
-    ADDI - ok
-    SUBI
-    ADD
-    SUB - ok
-    MULT - ok
-    LDI - ok
-    LDD
-    STD - ok 
-    LDX
-    STX - ok 
-    SWAP
+Para fazer a compilação do código, é preciso ter instalado o JDK em sua máquina e um compilador a escolha. 
+Caso queira editar o código e trabalhar nele, é necessário um editor de código a exemplo do Intellij, VSCode,
+ou outro.
 
-2 - implementar a memória, que vai receber um OPCODE, 2 REGISTRADORES, e um PARÊMETRO ou DADO de acordo com o OPCODE
+Para executar o código, deve ser executado o método _main()_ do arquivo de código _Sistema.java_.
+Com isso, antes de colocar para executar, deve ser escolhido o programa que quer que seja executado, removendo o comentário
+relativo a ele.
 
-3 - implementar funcionamento da CPU tal qual pseudocódigo no pdf
+````
+public static void main(String args[]) {
+		Sistema s = new Sistema();
+		s.roda(progs.pa);     //executa PA
+		//s.roda(progs.pb);   //executa PB
+		//s.roda(progs.pc);  // executa PC
+		// s.roda(progs.progMinimo);
+		// s.roda(progs.fatorial);
+}
+````
 
-4 - pensar/implementar uma forma de fazer um tracking de a CPU está executando os comandos 
+**Seção Programas:**
 
-5 - implementar P1 (de teste apenas), PA, PB, PC 
+foram
