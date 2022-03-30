@@ -173,6 +173,7 @@ public class Sistema {
 						if (trataInterruptEndInv(reg[ir.r1])) {
 							if (reg[ir.r2] < 0) {
 								pc = reg[ir.r1];
+								System.out.print(pc);
 							} else {
 								pc++;
 							}
@@ -181,6 +182,7 @@ public class Sistema {
 
 					case JMPIM: // PC ← [A]
 						if (trataInterruptEndInv(ir.p)) {
+							m[ir.p].opc = Opcode.DATA;
 							pc = m[ir.p].p; // ?? ou Opcode.DATA???
 						}
 						break;
@@ -188,6 +190,7 @@ public class Sistema {
 					case JMPIGM: // if Rc > 0 then PC ← [A] else PC ← PC +1
 						if (trataInterruptEndInv(ir.p)) {
 							if (reg[ir.r2] > 0) {
+								m[ir.p].opc = Opcode.DATA;
 								pc = m[ir.p].p;
 							} else {
 								pc++;
@@ -198,6 +201,7 @@ public class Sistema {
 					case JMPILM: // if Rc < 0 then PC ← [A] else PC ← PC +1
 						if (trataInterruptEndInv(ir.p)) {
 							if (reg[ir.r2] < 0) {
+								m[ir.p].opc = Opcode.DATA;
 								pc = m[ir.p].p;
 							} else {
 								pc++;
@@ -208,6 +212,7 @@ public class Sistema {
 					case JMPIEM: // if Rc = 0 then PC ← [A] else PC ← PC +1
 						if (trataInterruptEndInv(ir.p)) {
 							if (reg[ir.r2] == 0) {
+								m[ir.p].opc = Opcode.DATA;
 								pc = m[ir.p].p;
 							} else {
 								pc++;
@@ -259,6 +264,7 @@ public class Sistema {
 					/*********** Instruções de movimentação ***********/
 					case LDD: // Rd ← [A]
 						if (trataInterruptEndInv(ir.p) && trataInterruptOverflow(m[ir.p].p)) {
+							m[ir.p].opc = Opcode.DATA;
 							reg[ir.r1] = m[ir.p].p;
 							pc++;
 						}
@@ -266,6 +272,7 @@ public class Sistema {
 
 					case LDX: // Rd ← [Rs]
 						if (trataInterruptEndInv(reg[ir.r2]) && trataInterruptOverflow(reg[ir.r1])) {
+							m[ir.r2].opc = Opcode.DATA;
 							reg[ir.r1] = m[reg[ir.r2]].p;
 							pc++;
 						}
@@ -438,7 +445,7 @@ public class Sistema {
 		s.roda(progs.pa); // "progs" significa acesso/referencia ao programa em memoria secundaria
 		// s.roda(progs.progMinimo);
 		// s.roda(progs.fatorial);
-		// s.roda(progs.pb);
+		 //s.roda(progs.pb);
 	}
 	// -------------------------------------------------------------------------------------------------------
 	// --------------- TUDO ABAIXO DE MAIN É AUXILIAR PARA FUNCIONAMENTO DO SISTEMA
@@ -516,37 +523,32 @@ public class Sistema {
 		// se for maior que zero este é o número de valores da sequencia de fibonacci a
 		// serem escritos em sequencia a partir de uma posição de memória;
 		public Word[] pa = new Word[] {
-				new Word(Opcode.LDI, 0, -1, 5), // 0 carrega o valor 5 no registrador 0
-				new Word(Opcode.STD, 0, -1, 37), // 1 pega o valor do r0 e coloca na posição 37 da memória
-				new Word(Opcode.LDD, 1, -1, 37), // 2 pega o valor da posição 37 da memória e coloca em r1
-				new Word(Opcode.SUBI, 1, -1, 1), // 3 subtrai 1 do valor que entrou (no caso 5), por conta do zero: 0-4
-													// (5 valores)
-				new Word(Opcode.LDI, 2, -1, 900), // 4 registrador que vai controlar o incremento de posição de memória
-				new Word(Opcode.JMPILM, -1, 1, 21), // 5 verifica se o valor no r1 é menor que 0, se sim, pula p/
-													// instrução 23, se não, segue o fluxo
-				new Word(Opcode.LDI, 5, -1, 1), // 6 carrega o primeiro valor de Fibonacci (1) no r5
-				new Word(Opcode.STX, 2, 5, -1), // 7 pega o valor do r5 e carrega na posição 900 (valor armazenado no
-												// r2)
-				new Word(Opcode.SUBI, 1, -1, 1), // 8 subtrai 1 dos valores do r1
-				new Word(Opcode.JMPILM, -1, 1, 23), // 9 se o valor do r1 for menor que 0, pula para instrução 23
-				new Word(Opcode.ADDI, 2, -1, 1), // 10 soma 1 ao valor que está no r2 (posição de memória)
-				new Word(Opcode.LDI, 6, -1, 1), // 11 carrega o segundo valor de Fibonacci (1) no r6
-				new Word(Opcode.STX, 2, 6, -1), // 12 carrega o valor de r6 na próxima posição da memória (r2)
-				new Word(Opcode.SUBI, 1, -1, 1), // 13 subtrai 1 do r1
-				new Word(Opcode.JMPILM, -1, 1, 23), // 14 se r1 menor do que 0, pula para instrução 23
-				new Word(Opcode.ADDI, 2, -1, 1), // 15 soma 1 na posição de memória
-				new Word(Opcode.ADD, 5, 6, -1), // 16 soma os valores de r5 e r6
-				new Word(Opcode.SWAP, 5, 6, -1), // 17 faz um swap dos registradores r5 e r6 para manter a ordem correta
-													// para somar
-				new Word(Opcode.STX, 2, 6, -1), // 18 carrega o valor de r6 (soma) para memória
-				new Word(Opcode.JMPIGM, -1, 1, 13), // 19 se o que tem no r1 é maior que 0, volta pra instrução 13, se
-													// não, segue
-				new Word(Opcode.JMP, -1, -1, 23), // 20 pula pro stop
-				new Word(Opcode.LDI, 3, -1, -1), // 21 carrega -1 no r3
-				new Word(Opcode.STX, 2, 3, -1), // 22 pega o que tá no r3 (-1) e coloca na posição de memória do r2
-												// (900)
-				new Word(Opcode.STOP, -1, -1, -1), // 23 para o programa
-				new Word(Opcode.DATA, -1, -1, -1)
+				new Word(Opcode.LDI, 0, -1, 6), 	// 0 carrega o valor 5 no registrador 0
+				new Word(Opcode.STD, 0, -1, 37), 	// 1 pega o valor do r0 e coloca na posição 37 da memória
+				new Word(Opcode.LDD, 1, -1, 37), 	// 2 pega o valor da posição 37 da memória e coloca em r1
+				new Word(Opcode.SUBI, 1, -1, 1), 	// 3 subtrai 1 do valor que entrou (no caso 5), por conta do zero: 0-4 (5 valores)
+				new Word(Opcode.LDI, 2, -1, 900), 	// 4 registrador que vai controlar o incremento de posição de memória
+				new Word(Opcode.LDI, 7, -1, 25),		// 5 carrega o valor 22 no registrador 7
+				new Word(Opcode.JMPIL, 7, 1, -1), // 6 verifica se o valor no r1 é menor que 0, se sim, pula p/ instrução 23, se não, segue o fluxo
+				new Word(Opcode.LDI, 5, -1, 1), 	// 7 carrega o primeiro valor de Fibonacci (1) no r5
+				new Word(Opcode.STX, 2, 5, -1), 	// 8 pega o valor do r5 e carrega na posição 900 (valor armazenado no r2)
+				new Word(Opcode.SUBI, 1, -1, 1), 	// 9 subtrai 1 dos valores do r1
+				new Word(Opcode.JMPIL, 7, 1, -1), // 10 se o valor do r1 for menor que 0, pula para instrução 23
+				new Word(Opcode.ADDI, 2, -1, 1), 	// 11 soma 1 ao valor que está no r2 (posição de memória)
+				new Word(Opcode.LDI, 6, -1, 1), 	// 12 carrega o segundo valor de Fibonacci (1) no r6
+				new Word(Opcode.STX, 2, 6, -1), 	// 13 carrega o valor de r6 na próxima posição da memória (r2)
+				new Word(Opcode.SUBI, 1, -1, 1), 	// 14 subtrai 1 do r1
+				new Word(Opcode.JMPIL, 7, 1, -1), // 16 se r1 menor do que 0, pula para instrução 23
+				new Word(Opcode.ADDI, 2, -1, 1), 	// 17 soma 1 na posição de memória
+				new Word(Opcode.ADD, 5, 6, -1), 	// 18 soma os valores de r5 e r6
+				new Word(Opcode.SWAP, 5, 6, -1), 	// 19 faz um swap dos registradores r5 e r6 para manter a ordem correta para somar
+				new Word(Opcode.STX, 2, 6, -1), 	// 20 carrega o valor de r6 (soma) para memória
+				new Word(Opcode.LDI, 4, -1, 14), //21
+				new Word(Opcode.JMPIG, 4, 1, -1), // 22 se o que tem no r1 é maior que 0, volta pra instrução 13, se não, segue
+				new Word(Opcode.JMPIL, 7, 1, -1), 	// 23 pula pro stop
+				new Word(Opcode.LDI, 3, -1, -1), 	// 24 carrega -1 no r3
+				new Word(Opcode.STX, 2, 3, -1), 	// 25 pega o que tá no r3 (-1) e coloca na posição de memória do r2 (900)
+				new Word(Opcode.STOP, -1, -1, -1),  // 26 para o programa
 		};
 
 		// PB: dado um inteiro em alguma posição de memória,
@@ -556,17 +558,19 @@ public class Sistema {
 				new Word(Opcode.LDI, 0, -1, 3), // 0 carrega o valor 3 no r0
 				new Word(Opcode.STD, 0, -1, 36), // 1 carrega o valor do r0 na posição 36 da memória
 				new Word(Opcode.LDD, 1, -1, 36), // 2 pega o valor da posição 36 da memória e coloca em r1
-				new Word(Opcode.JMPILM, -1, 1, 11), // 3 se for negativo, pula pra instrução 11
-				new Word(Opcode.LDD, 2, -1, 36), // 4 carrega em r2 o mesmo valor de r1
-				new Word(Opcode.SUB, 1, -1, 1), // 5 subtrai 1 do valor que tinha em r1
-				new Word(Opcode.MULT, 2, 2, -1), // 6 multiplica r1 e r2 e coloca em r2 o valor
-				new Word(Opcode.SUB, 1, -1, 1), // 7 subtrai 1 do r1
-				new Word(Opcode.JMPIGM, -1, 1, 6), // 8 se for maior que 0, volta pra instrução 6 se não, segue o fluxo
-				new Word(Opcode.STD, 2, -1, 35), // 9 coloca na posição 35 da memória o resultado do fatorial
-				new Word(Opcode.JMP, -1, -1, 13), // 10 pula pro stop
-				new Word(Opcode.LDI, 1, -1, -1), // 11 carrega no r1 o valor -1
-				new Word(Opcode.STD, 1, -1, 35), // 12 coloca na posição 35 da memória o valor -1
-				new Word(Opcode.STOP, -1, -1, -1) // 13 termina a execução
+				new Word(Opcode.LDI, 5, -1, 12),	//3 carrega o valor 12 no r5
+				new Word(Opcode.JMPIL, 5, 1, -1), // 4 se for negativo, pula pra instrução 11
+				new Word(Opcode.LDD, 2, -1, 36), // 5 carrega em r2 o mesmo valor de r1
+				new Word(Opcode.SUBI, 1, -1, 1), // 6 subtrai 1 do valor que tinha em r1
+				new Word(Opcode.MULT, 2, 1, -1), // 7 multiplica r1 e r2 e coloca em r2 o valor
+				new Word(Opcode.SUBI, 1, -1, 1), // 8 subtrai 1 do r1
+				new Word(Opcode.LDI, 6, -1, 7),  // 9 carrega o valor 7 (próxima instrução) no r6
+				new Word(Opcode.JMPIG, 6, 1, -1), // 10 se for maior que 0, volta pra instrução 6 se não, segue o fluxo
+				new Word(Opcode.STD, 2, -1, 35), // 11 coloca na posição 35 da memória o resultado do fatorial
+				new Word(Opcode.JMP, -1, -1, 13), // 12 pula pro stop
+				new Word(Opcode.LDI, 1, -1, -1), // 13 carrega no r1 o valor -1
+				new Word(Opcode.STD, 1, -1, 35), // 14 coloca na posição 35 da memória o valor -1
+				new Word(Opcode.STOP, -1, -1, -1) // 15 termina a execução
 		};
 
 		// PC: para um N definido (10 por exemplo)
@@ -590,7 +594,6 @@ public class Sistema {
 				new Word(Opcode.STD, 0, -1, 705), // 1 carrega o valor do r0 na posição 705 da memória
 				new Word(Opcode.LDI, 0, -1, 0), // 0 carrega o valor 0 no r0
 				new Word(Opcode.STD, 0, -1, 706), // 1 carrega o valor do r0 na posição 706 da memória
-
 		};
 	}
 }
