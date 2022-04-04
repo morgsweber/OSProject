@@ -1,4 +1,4 @@
-"# SisOpProject" 
+# SisOpProject
 
 **Nome dos integrantes:**
 
@@ -14,14 +14,14 @@ ou outro.
 Para executar o código, deve ser executado o método _main()_ do arquivo de código _Sistema.java_.
 Com isso, antes de colocar para executar, deve ser escolhido o programa que quer que seja executado, removendo o comentário relativo a ele.
 
-````
+```java
 public static void main(String args[]) {
-		Sistema s = new Sistema();
-		s.roda(progs.pa);     //executa PA
-		//s.roda(progs.pb);   //executa PB
-		//s.roda(progs.pc);  // executa PC
+    Sistema s = new Sistema();
+    s.roda(progs.pa);     //executa PA
+    //s.roda(progs.pb);   //executa PB
+    //s.roda(progs.pc);  // executa PC
 }
-````
+```
 
 **Seção Programas:**
 
