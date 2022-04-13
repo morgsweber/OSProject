@@ -1,5 +1,4 @@
-import Enums.Opcode;
-
+package hardware;
 public class Word {         // cada posicao da memoria tem uma instrucao (ou um dado)
     public Opcode opc; 
     public int r1;          // indice do primeiro registrador da operacao (Rs ou Rd cfe opcode na tabela)

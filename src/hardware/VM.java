@@ -1,4 +1,4 @@
-import Enums.Opcode;
+package hardware;
 
 //VM constituída de uma CPU e memória 
 

@@ -1,7 +1,5 @@
+package hardware;
 import java.util.Scanner;
-
-import Enums.Interruptions;
-import Enums.Opcode;
 
 public class CPU {
     // característica do processador: contexto da CPU ...

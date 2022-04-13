@@ -1,3 +1,5 @@
+package software;
+import hardware.*;
 public class Monitor {
     public VM vm;
     public void dump(Word w) {

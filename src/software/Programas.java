@@ -1,5 +1,5 @@
-import Enums.Opcode;
-
+package software;
+import hardware.*;
 public class Programas {
 
     /* Programas fornecidos pelo professor */
