@@ -1,7 +1,7 @@
 package hardware;
 import java.util.Scanner;
 
-public class CPU {
+public class CPU extends Thread{
     // característica do processador: contexto da CPU ...
     private int pc; // ... composto de program counter,
     private Word ir; // instruction register,

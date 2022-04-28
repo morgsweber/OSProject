@@ -18,4 +18,8 @@ public class VM {
         // cpu
         cpu = new CPU(m); // cpu acessa memória
     }
+
+    public void run() {
+        cpu.start();
+    }
 }

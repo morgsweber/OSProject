@@ -5,6 +5,22 @@
 Gustavo G. Lottermann, Morgana Luiza Weber, Eduardo Berwanger
 
 
+## Entrega 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Entrega 1
 **Seção Implementação:**
 
 Para fazer a compilação do código, é preciso ter instalado o JDK em sua máquina e um compilador a escolha. 
