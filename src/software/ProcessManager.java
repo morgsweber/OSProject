@@ -1,6 +1,6 @@
-package software;
+package src.software;
 
-import hardware.Word;
+import src.hardware.Word;
 
 public class ProcessManager {
     public boolean createProcess(Word[] program){

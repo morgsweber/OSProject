@@ -1,4 +1,4 @@
-package hardware;
+package src.hardware;
 
 public class VM {
     public int memSize;

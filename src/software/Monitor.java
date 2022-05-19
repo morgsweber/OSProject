@@ -1,7 +1,6 @@
-package software;
-import hardware.*;
+package src.software;
+import src.hardware.*;
 public class Monitor {
-    public VM vm;
     public void dump(Word w) {
         System.out.print("[ ");
         System.out.print(w.opc);
@@ -31,8 +30,8 @@ public class Monitor {
         }
     }
 
-    public void run() {
-        vm.cpu.setContext(0);                     
+    public void run(VM vm) {
+        vm.cpu.setContext(0);
         vm.cpu.run();                             
     }
 }

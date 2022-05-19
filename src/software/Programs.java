@@ -1,5 +1,5 @@
-package software;
-import hardware.*;
+package src.software;
+import src.hardware.*;
 public class Programs {
 
         /* Programas fornecidos pelo professor */

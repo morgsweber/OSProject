@@ -1,4 +1,4 @@
-package hardware;
+package src.hardware;
 import java.util.Scanner;
 
 public class CPU extends Thread{
@@ -281,11 +281,11 @@ public class CPU extends Thread{
             if (ir.opc == Opcode.STOP) {
                 break; 
             }
-            try {
+            /*try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
     }
 }

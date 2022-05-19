@@ -1,7 +1,7 @@
-package software;
+package src.software;
 
-import hardware.VM;
-import hardware.Word;
+import src.hardware.VM;
+import src.hardware.Word;
 
 public class SysOp {
 	public VM vm;
@@ -18,7 +18,7 @@ public class SysOp {
 
         monitor.dump(vm.m, 0, program.length);
 
-        monitor.run();
+        monitor.run(vm);
         System.out.println("---------------------------------- after execution ");
 
         monitor.dump(vm.m, 0, program.length);
