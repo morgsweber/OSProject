@@ -1,6 +1,6 @@
 package software;
 import hardware.*;
-public class Programas {
+public class Programs {
 
         /* Programas fornecidos pelo professor */
         public Word[] progMinimo = new Word[] {

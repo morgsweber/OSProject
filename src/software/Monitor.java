@@ -14,15 +14,15 @@ public class Monitor {
         System.out.println("  ] ");
     }
 
-    public void dump(Word[] m, int ini, int fim) {
-        for (int i = ini; i < fim; i++) {
+    public void dump(Word[] m, int start, int end) {
+        for (int i = start; i < end; i++) {
             System.out.print(i);
             System.out.print(":  ");
             dump(m[i]);
         }
     }
 
-    public void carga(Word[] p, Word[] m) {         // significa ler "p" de memoria secundaria e colocar na principal "m"
+    public void charge(Word[] p, Word[] m) {        
         for (int i = 0; i < p.length; i++) {
             m[i].opc = p[i].opc;
             m[i].r1 = p[i].r1;
@@ -31,10 +31,8 @@ public class Monitor {
         }
     }
 
-    public void executa() {
-        vm.cpu.setContext(0);                       // monitor seta contexto - pc aponta para inicio do programa
-        vm.cpu.run();                               // e cpu executa
-                                                    // note aqui que o monitor espera que o programa carregado acabe normalmente
-                                                    // nao ha protecoes... o que poderia acontecer ?
+    public void run() {
+        vm.cpu.setContext(0);                     
+        vm.cpu.run();                             
     }
 }

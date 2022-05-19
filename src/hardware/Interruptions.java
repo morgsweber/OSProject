@@ -1,4 +1,4 @@
 package hardware;
 public enum Interruptions {
-    OverFlow, EnderecoInvalido, InstrucaoInvalida, SemInterrupcao, ChamadaDeSistema;
+    OverFlow, InvalidAdress, InvalidInstruction, NoInterruptions, SystemCall;
 }

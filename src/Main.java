@@ -1,11 +1,11 @@
-import software.Programas;
-import software.Sistema;
+import software.Programs;
+import software.SysOp;
 
 public class Main {
     public static void main(String args[]) {
-        Programas progs = new Programas();
+        Programs progs = new Programs();
 
-        Sistema s = new Sistema();
-        s.roda(progs.fatorial);
+        SysOp s = new SysOp();
+        s.run(progs.fatorial);
     }
 }

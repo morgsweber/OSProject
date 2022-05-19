@@ -2,40 +2,37 @@ package hardware;
 import java.util.Scanner;
 
 public class CPU extends Thread{
-    // característica do processador: contexto da CPU ...
-    private int pc; // ... composto de program counter,
-    private Word ir; // instruction register,
-    private int[] reg; // registradores da CPU
-    private Interruptions interrupcao;
+    private int pc; 
+    private Word ir; 
+    private int[] reg;
+    private Interruptions interruption;
 
-    private Word[] m; // CPU acessa MEMORIA, guarda referencia 'm' a ela. memoria nao muda. ee sempre
-                        // a mesma.
+    private Word[] m; 
 
-    public CPU(Word[] _m) { // ref a MEMORIA e interrupt handler passada na criacao da CPU
-        m = _m; // usa o atributo 'm' para acessar a memoria.
-        reg = new int[10]; // aloca o espaço dos registradores
-        interrupcao = Interruptions.SemInterrupcao;
+    public CPU(Word[] _m) { 
+        m = _m; 
+        reg = new int[10]; 
+        interruption = Interruptions.NoInterruptions;
     }
 
-    public boolean trataInterruptOverflow(int valor) {
+    public boolean overFlowInterrupt(int valor) {
         if (valor > -2147483647 && valor < 2147483647) {
             return true;
         }
-        interrupcao = Interruptions.OverFlow;
+        interruption = Interruptions.OverFlow;
         return false;
     }
 
-    public boolean trataInterruptEndInv(int endereco) {
-        if (endereco >= 0 && endereco < m.length) {
+    public boolean invalidAdressInterrupt(int adress) {
+        if (adress >= 0 && adress < m.length) {
             return true;
         }
-        interrupcao = Interruptions.EnderecoInvalido;
+        interruption = Interruptions.InvalidAdress;
         return false;
     }
 
-    public void setContext(int _pc) { // no futuro esta funcao vai ter que ser
-        pc = _pc; // limite e pc (deve ser zero nesta versao)
-        System.out.println("** aqui");
+    public void setContext(int _pc) {
+        pc = _pc;
     }
 
     private void dump(Word w) {
@@ -63,23 +60,20 @@ public class CPU extends Thread{
         dump(ir);
     }
 
-    public void run() { // execucao da CPU supoe que o contexto da CPU, vide acima, esta devidamente
-                        // setado
-        while (true) { // ciclo de instrucoes. acaba cfe instrucao, veja cada caso.
-
-            if (interrupcao != Interruptions.SemInterrupcao) {
-                switch (interrupcao) {
+    public void run() { 
+        while (true) {
+            if (interruption != Interruptions.NoInterruptions) {
+                switch (interruption) {
                     case OverFlow:
                         System.out.println("----------Interrupção do tipo: Overflow----------");
                         break;
-                    case EnderecoInvalido:
+                    case InvalidAdress:
                         System.out.println("----------Interrupção do tipo: Endereço Inválido----------");
                         break;
-                    case InstrucaoInvalida:
+                    case InvalidInstruction:
                         System.out.println("----------Interrupção do tipo: Instrução Inválida----------");
                         break;
-                    case ChamadaDeSistema:
-                        //lê do teclado
+                    case SystemCall:
                         Scanner in = new Scanner(System.in);
 
                         if (reg[8]==1){
@@ -92,27 +86,22 @@ public class CPU extends Thread{
                             int ec = reg[9];
                             System.out.println("Retorno: " + m[ec].p);
                         }
-                        interrupcao = Interruptions.SemInterrupcao;
+                        interruption = Interruptions.NoInterruptions;
                         continue;
                 }
                 break;
             }
-            // FETCH
-            ir = m[pc]; // busca posicao da memoria apontada por pc, guarda em ir
-            // if debug
+            ir = m[pc]; 
             showState();
-            // EXECUTA INSTRUCAO NO ir
-            switch (ir.opc) { // para cada opcode, sua execução
-
-                /*********** Instruções JUMP ***********/
-                case JMP: // PC ← k Dotti
-                    if (trataInterruptEndInv(ir.p)) {
+            switch (ir.opc) {
+                case JMP:
+                    if (invalidAdressInterrupt(ir.p)) {
                         pc = ir.p;
                     }
                     break;
 
-                case JMPIG: // If Rc > 0 Then PC ← Rs Else PC ← PC +1 Dotti
-                    if (trataInterruptEndInv(reg[ir.r1])) {
+                case JMPIG:
+                    if (invalidAdressInterrupt(reg[ir.r1])) {
                         if (reg[ir.r2] > 0) {
                             pc = reg[ir.r1];
                         } else {
@@ -121,8 +110,8 @@ public class CPU extends Thread{
                     }
                     break;
 
-                case JMPIE: // If Rc = 0 Then PC ← Rs Else PC ← PC +1 Dotti
-                    if (trataInterruptEndInv(reg[ir.r1])) {
+                case JMPIE:
+                    if (invalidAdressInterrupt(reg[ir.r1])) {
                         if (reg[ir.r2] == 0) {
                             pc = reg[ir.r1];
                         } else {
@@ -131,17 +120,17 @@ public class CPU extends Thread{
                     }
                     break;
 
-                case STOP: // por enquanto, para execucao Dotti
+                case STOP:
                     break;
 
-                case JMPI: // PC ← Rs
-                    if (trataInterruptEndInv(reg[ir.r1])) {
+                case JMPI: 
+                    if (invalidAdressInterrupt(reg[ir.r1])) {
                         pc = reg[ir.r1];
                     }
                     break;
 
-                case JMPIL: // Rc < 0 then PC ← Rs else PC ← PC +1
-                    if (trataInterruptEndInv(reg[ir.r1])) {
+                case JMPIL: 
+                    if (invalidAdressInterrupt(reg[ir.r1])) {
                         if (reg[ir.r2] < 0) {
                             pc = reg[ir.r1];
                         } else {
@@ -150,15 +139,15 @@ public class CPU extends Thread{
                     }
                     break;
 
-                case JMPIM: // PC ← [A]
-                    if (trataInterruptEndInv(ir.p)) {
+                case JMPIM:
+                    if (invalidAdressInterrupt(ir.p)) {
                         m[ir.p].opc = Opcode.DATA;
-                        pc = m[ir.p].p; // ?? ou Opcode.DATA???
+                        pc = m[ir.p].p; 
                     }
                     break;
 
-                case JMPIGM: // if Rc > 0 then PC ← [A] else PC ← PC +1
-                    if (trataInterruptEndInv(ir.p)) {
+                case JMPIGM: 
+                    if (invalidAdressInterrupt(ir.p)) {
                         if (reg[ir.r2] > 0) {
                             m[ir.p].opc = Opcode.DATA;
                             pc = m[ir.p].p;
@@ -168,8 +157,8 @@ public class CPU extends Thread{
                     }
                     break;
 
-                case JMPILM: // if Rc < 0 then PC ← [A] else PC ← PC +1
-                    if (trataInterruptEndInv(ir.p)) {
+                case JMPILM: 
+                    if (invalidAdressInterrupt(ir.p)) {
                         if (reg[ir.r2] < 0) {
                             m[ir.p].opc = Opcode.DATA;
                             pc = m[ir.p].p;
@@ -179,8 +168,8 @@ public class CPU extends Thread{
                     }
                     break;
 
-                case JMPIEM: // if Rc = 0 then PC ← [A] else PC ← PC +1
-                    if (trataInterruptEndInv(ir.p)) {
+                case JMPIEM: 
+                    if (invalidAdressInterrupt(ir.p)) {
                         if (reg[ir.r2] == 0) {
                             m[ir.p].opc = Opcode.DATA;
                             pc = m[ir.p].p;
@@ -190,86 +179,84 @@ public class CPU extends Thread{
                     }
                     break;
 
-                /********** Instruções aritméticas ***********/
-                case ADD: // Rd ← Rd + Rs
+                case ADD: 
                     int aux = reg[ir.r1] + reg[ir.r2];
-                    if (trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(reg[ir.r2])
-                            && trataInterruptOverflow(aux)){
+                    if (overFlowInterrupt(reg[ir.r1]) && overFlowInterrupt(reg[ir.r2])
+                            && overFlowInterrupt(aux)){
                         reg[ir.r1] = reg[ir.r1] + reg[ir.r2];
                         pc++;
                     }
                     break;
 
-                case MULT: // Rd ← Rd * Rs Dotti
+                case MULT: 
                     int aux2 = reg[ir.r1] * reg[ir.r2];
-                    if (trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(reg[ir.r2])
-                            && trataInterruptOverflow(aux2)){
+                    if (overFlowInterrupt(reg[ir.r1]) && overFlowInterrupt(reg[ir.r2])
+                            && overFlowInterrupt(aux2)){
                         reg[ir.r1] = reg[ir.r1] * reg[ir.r2];
                         pc++;
                     }
                     break;
 
-                case ADDI: // Rd ← Rd + k Dotti
+                case ADDI: 
                     int aux3 =  reg[ir.r1] + ir.p;
-                    if (trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(ir.p)
-                            && trataInterruptOverflow(aux3)) {
+                    if (overFlowInterrupt(reg[ir.r1]) && overFlowInterrupt(ir.p)
+                            && overFlowInterrupt(aux3)) {
                         reg[ir.r1] = reg[ir.r1] + ir.p;
                         pc++;
                     }
                     break;
 
-                case SUB: // Rd ← Rd - Rs Dotti
+                case SUB: 
                     int aux4 = reg[ir.r1] - reg[ir.r2];
-                    if (trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(reg[ir.r2])
-                            && trataInterruptOverflow(aux4)) {
+                    if (overFlowInterrupt(reg[ir.r1]) && overFlowInterrupt(reg[ir.r2])
+                            && overFlowInterrupt(aux4)) {
                         reg[ir.r1] = reg[ir.r1] - reg[ir.r2];
                         pc++;
                     }
                     break;
 
-                case SUBI: // Rd ← Rd – k
+                case SUBI: 
                     int aux5 = reg[ir.r1] - ir.p;
-                    if (trataInterruptOverflow(reg[ir.r1]) && trataInterruptOverflow(ir.p)
-                            && trataInterruptOverflow(aux5)) {
+                    if (overFlowInterrupt(reg[ir.r1]) && overFlowInterrupt(ir.p)
+                            && overFlowInterrupt(aux5)) {
                         reg[ir.r1] = reg[ir.r1] - ir.p;
                         pc++;
                     }
                     break;
 
-                /*********** Instruções de movimentação ***********/
-                case LDD: // Rd ← [A]
-                    if (trataInterruptEndInv(ir.p) && trataInterruptOverflow(m[ir.p].p)) {
+                case LDD: 
+                    if (invalidAdressInterrupt(ir.p) && overFlowInterrupt(m[ir.p].p)) {
                         m[ir.p].opc = Opcode.DATA;
                         reg[ir.r1] = m[ir.p].p;
                         pc++;
                     }
                     break;
 
-                case LDX: // Rd ← [Rs]
-                    if (trataInterruptEndInv(reg[ir.r2]) && trataInterruptOverflow(reg[ir.r1])) {
+                case LDX: 
+                    if (invalidAdressInterrupt(reg[ir.r2]) && overFlowInterrupt(reg[ir.r1])) {
                         m[ir.r2].opc = Opcode.DATA;
                         reg[ir.r1] = m[reg[ir.r2]].p;
                         pc++;
                     }
                     break;
 
-                case STX: // [Rd] ←Rs Dotti
-                    if (trataInterruptEndInv(reg[ir.r1]) && trataInterruptOverflow(reg[ir.r2])) {
+                case STX: 
+                    if (invalidAdressInterrupt(reg[ir.r1]) && overFlowInterrupt(reg[ir.r2])) {
                         m[reg[ir.r1]].opc = Opcode.DATA;
                         m[reg[ir.r1]].p = reg[ir.r2];
                         pc++;
                     }
                     break;
 
-                case LDI: // Rd ← k Dotti
-                    if (trataInterruptOverflow(ir.p)) {
+                case LDI: 
+                    if (overFlowInterrupt(ir.p)) {
                         reg[ir.r1] = ir.p;
                         pc++;
                     }
                     break;
 
-                case STD: // [A] ← Rs Dotti
-                    if (trataInterruptEndInv(ir.p) && trataInterruptOverflow(m[ir.p].p)) {
+                case STD: 
+                    if (invalidAdressInterrupt(ir.p) && overFlowInterrupt(m[ir.p].p)) {
                         m[ir.p].opc = Opcode.DATA;
                         m[ir.p].p = reg[ir.r1];
                         pc++;
@@ -283,24 +270,17 @@ public class CPU extends Thread{
                     pc++;
                     break;
                 case TRAP:
-                    interrupcao = Interruptions.ChamadaDeSistema;
+                    interruption = Interruptions.SystemCall;
                     pc ++;
                     break; 
 
                 default:
-                    // opcode desconhecido
-                    interrupcao = Interruptions.InstrucaoInvalida;
+                    interruption = Interruptions.InvalidInstruction;
             }
 
-            // VERIFICA INTERRUPÇÃO !!! - TERCEIRA FASE DO CICLO DE INSTRUÇÕES
             if (ir.opc == Opcode.STOP) {
-                break; // break sai do loop da cpu
-
-                // if int ligada - vai para tratamento da int
-                // desviar para rotina java que trata int
+                break; 
             }
-
-            //Adicionado para facilitar o controle do que está acontecendo 
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
