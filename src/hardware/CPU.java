@@ -1,7 +1,7 @@
-package src.hardware;
+package hardware;
 import java.util.Scanner;
 
-public class CPU extends Thread{
+public class CPU {
     private int pc; 
     private Word ir; 
     private int[] reg;
@@ -60,7 +60,8 @@ public class CPU extends Thread{
         dump(ir);
     }
 
-    public void run() { 
+    public void run() {
+        System.out.println("#           Running CPU                          #"); 
         while (true) {
             if (interruption != Interruptions.NoInterruptions) {
                 switch (interruption) {

@@ -1,4 +1,4 @@
-package src.software;
+package software;
 
 public class MemoryManager {
     public int memorySize;

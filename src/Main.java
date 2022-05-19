@@ -1,11 +1,10 @@
-import src.software.Programs;
-import src.software.SysOp;
-
+import hardware.VM;
+import software.Programs;
 public class Main {
     public static void main(String args[]) {
-        Programs progs = new Programs();
-
-        SysOp s = new SysOp();
-        s.run(progs.pa);
+        System.out.println("########### Operation System Simulator ###########");
+        Programs p = new Programs();
+        VM vm = new VM(p.fatorial);
+        vm.run();
     }
 }

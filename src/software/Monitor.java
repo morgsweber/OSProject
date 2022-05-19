@@ -1,5 +1,5 @@
-package src.software;
-import src.hardware.*;
+package software;
+import hardware.*;
 public class Monitor {
     public void dump(Word w) {
         System.out.print("[ ");

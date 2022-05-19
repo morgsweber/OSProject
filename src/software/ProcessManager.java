@@ -1,8 +1,15 @@
-package src.software;
-
-import src.hardware.Word;
+package software;
+import hardware.Word;
 
 public class ProcessManager {
+    public int memSize;
+    public int frameSize;
+
+    public ProcessManager(int memSize, int frameSize){
+        this.memSize = memSize;
+        this.frameSize = frameSize;
+    }
+
     public boolean createProcess(Word[] program){
         int programSize = program.length;
         return true;
