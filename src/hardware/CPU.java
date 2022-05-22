@@ -1,7 +1,7 @@
 package hardware;
 import java.util.Scanner;
 
-public class CPU {
+public class CPU extends Thread{
     private int pc; 
     private Word ir; 
     private int[] reg;

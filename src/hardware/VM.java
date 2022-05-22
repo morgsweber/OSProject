@@ -1,13 +1,15 @@
 package hardware;
+import software.Interface;
 import software.ProcessManager;
 
 public class VM {
     public Word[] p;
     public int memSize;
     public int frameSize;
-    public Word[] m;
+    public static Word[] m;
     public CPU cpu;
-    public ProcessManager pm;
+    public static ProcessManager pm;
+    public Interface i;
 
     public VM(Word[] program) {
         this.p= program;
@@ -17,13 +19,14 @@ public class VM {
         for (int i = 0; i < memSize; i++) {
             m[i] = new Word(Opcode.___, -1, -1, -1);
         }
+        i = new Interface();
         cpu = new CPU(m);
         pm = new ProcessManager(memSize, frameSize);
-        pm.createProcess(p);
     }
 
     public void run() {
         System.out.println("#           Running Virtual Machine              #");
-        cpu.run();
+        cpu.start();
+        i.start();
     }
 }
