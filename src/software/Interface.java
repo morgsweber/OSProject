@@ -2,7 +2,7 @@ package software;
 import java.util.Scanner;
 import hardware.VM;
 
-public class Interface extends Thread {
+public class Interface {
     Scanner in = new Scanner(System.in);
 
     public void run(){
@@ -15,7 +15,7 @@ public class Interface extends Thread {
         System.out.println("###########     INSTRUCTIONS:          ###########");
         System.out.println("----------- exec <id>                  -----------");
         System.out.println("----------- dump <id>                  -----------");
-        System.out.println("----------- dumpM <start> <end>        -----------");
+        System.out.println("----------- dumpM 0                    -----------");
         System.out.println("----------- dealocate <id>             -----------");
         System.out.println("----------- exit 0                     -----------");
         System.out.println("##################################################");
@@ -26,7 +26,7 @@ public class Interface extends Thread {
             int id = Integer.parseInt(readLine.split(" ")[1]);
 
             //TODO: adicionar outros comandos no if
-            if(id != 1  && id != 2){
+            if(id != 0 && id != 1  && id != 2){
                 System.out.println("Invalid program id");
             }
             else{
@@ -35,16 +35,16 @@ public class Interface extends Thread {
                         createProcess(id);
                         break;
                     case "dump":
-                        //TODO: função dump
+                        VM.pm.dump(id);
                         break;
                     case "dumpM":
-                        //TODO: função dump memória
+                        VM.pm.dumpM();
                         break;
                     case "dealocate":
-                        VM.pm.endProcess(id);
+                        VM.pm.deallocateProcess(id);
                         break;
                     case "exit":
-                        System.out.println("Ending system.");
+                        System.out.println("Ending system");
                         System.exit(0);
                         in.close();
                         break;

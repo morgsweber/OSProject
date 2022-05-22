@@ -19,7 +19,7 @@ public class ProcessManager {
     }
 
     public boolean createProcess(Word[] program){
-        int [] frames = mm.allocate(program.length);
+        int[] frames = mm.allocate(program.length);
         if (frames == null){
             return false;
         }
@@ -36,8 +36,8 @@ public class ProcessManager {
         return true;
     }
 
-    private int [] translate(int [] frames){
-        int [] positions = new int[frames.length * mm.pageSize];
+    private int[] translate(int[] frames){
+        int[] positions = new int[frames.length * mm.pageSize];
         int count = 0; 
         for (int i = 0; i < frames.length; i++) {
             for (int j = 0; j < mm.pageSize; j++) {
@@ -45,13 +45,23 @@ public class ProcessManager {
                 count++; 
             }
         }
-        
         return positions;
     }
 
-    public void endProcess(int id){
+    public void deallocateProcess(int id){
         ready.remove(id);
-        mm.deallocates(running.pagTable);
+        mm.deallocates(running.pageTable);
         running = null;
-    }    
+    }  
+    
+    public void dump(int id){
+
+    }
+
+    public void dumpM(){
+        for(int i=0; i<mm.frames.length; i++){
+            System.out.print(mm.frames[i] + " | ");
+        }
+        System.out.println();
+    }
 }

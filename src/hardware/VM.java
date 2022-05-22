@@ -11,8 +11,7 @@ public class VM {
     public static ProcessManager pm;
     public Interface i;
 
-    public VM(Word[] program) {
-        this.p= program;
+    public VM() {
         memSize = 1024;
         frameSize = 8;
         m = new Word[memSize];
@@ -25,7 +24,7 @@ public class VM {
     }
 
     public void run() {
-        i.start();
-        cpu.start();     
+        i.run();
+        cpu.run();     
     }
 }
