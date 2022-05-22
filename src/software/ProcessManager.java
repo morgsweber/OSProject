@@ -26,14 +26,13 @@ public class ProcessManager {
 
         int [] positions = translate(frames);
         for (int i = 0; i < program.length; i++) {
-            // System.out.println(positions[i]);
             VM.m[positions[i]].opc = program[i].opc;     
             VM.m[positions[i]].r1 = program[i].r1;     
             VM.m[positions[i]].r2 = program[i].r2;     
             VM.m[positions[i]].p = program[i].p;
         }
         ProcessControlBlock pcb = new ProcessControlBlock(positions[0],new int[10],frames);
-        ready.add(pcb);
+        //ready.add(pcb);
         return true;
     }
 

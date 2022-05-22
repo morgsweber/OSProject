@@ -61,7 +61,6 @@ public class CPU extends Thread{
     }
 
     public void run() {
-        System.out.println("#           Running CPU                          #"); 
         while (true) {
             if (interruption != Interruptions.NoInterruptions) {
                 switch (interruption) {
@@ -93,7 +92,7 @@ public class CPU extends Thread{
                 break;
             }
             ir = m[pc]; 
-            showState();
+            //showState();
             switch (ir.opc) {
                 case JMP:
                     if (invalidAdressInterrupt(ir.p)) {

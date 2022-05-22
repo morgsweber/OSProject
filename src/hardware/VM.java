@@ -25,8 +25,7 @@ public class VM {
     }
 
     public void run() {
-        System.out.println("#           Running Virtual Machine              #");
-        cpu.start();
         i.start();
+        cpu.start();     
     }
 }
