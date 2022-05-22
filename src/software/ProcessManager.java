@@ -14,8 +14,8 @@ public class ProcessManager {
     public ProcessManager(int memSize, int frameSize){ 
         this.memSize = memSize;
         this.frameSize = frameSize;
+        this.ready = new ArrayList<ProcessControlBlock>();
         mm = new MemoryManager(memSize, frameSize);
-
     }
 
     public boolean createProcess(Word[] program){
@@ -32,7 +32,7 @@ public class ProcessManager {
             VM.m[positions[i]].p = program[i].p;
         }
         ProcessControlBlock pcb = new ProcessControlBlock(positions[0],new int[10],frames);
-        //ready.add(pcb);
+        ready.add(pcb);
         return true;
     }
 
@@ -50,6 +50,7 @@ public class ProcessManager {
     }
 
     public void endProcess(int id){
+        ready.remove(id);
         mm.deallocates(running.pagTable);
         running = null;
     }    
