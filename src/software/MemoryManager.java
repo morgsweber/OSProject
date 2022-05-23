@@ -1,6 +1,6 @@
 package software;
-
-import java.util.ArrayList;
+import hardware.VM;
+import hardware.Opcode;
 
 public class MemoryManager {
     public int memorySize;
@@ -29,18 +29,14 @@ public class MemoryManager {
         else { pageNum = wordNum/pageSize + 1; }
 
         int[] pagesTable = new int [pageNum];
-        ArrayList<Integer> aux = new ArrayList<>();
         for (int i = 0; i < frames.length; i++) {
-            if(count == pageNum){ break; }
-            else if(!frames[i]){
-                aux.add(i);
-                count++;
+            if(count == pageNum){
+                break;
             }
-        }
-        if(count == pageNum){
-            for(int i=0; i < aux.size(); i++){
-                pagesTable[i] = aux.get(i);
-                frames[aux.get(i)] = true;
+            else if(!frames[i]){
+                pagesTable[count] = i;
+                count++;
+                frames[i] = true;
             }
         }
 
@@ -61,6 +57,12 @@ public class MemoryManager {
     public void deallocates(int[] tablePages){
         for (int i = 0; i < tablePages.length; i++) {
             frames[tablePages[i]] = false;
+            for (int j = pageSize * tablePages[i]; j < pageSize * (tablePages[i] + 1); j++) {
+                VM.m[j].opc = Opcode.___;
+                VM.m[j].r1 = -1;
+                VM.m[j].r2 = -1;
+                VM.m[j].p = -1;
+            }
         }
     }
 }

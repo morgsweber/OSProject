@@ -7,12 +7,12 @@ public class Programs {
                 // OPCODE R1 R2 P :: VEJA AS COLUNAS VERMELHAS DA TABELA DE DEFINICAO DE
                 // OPERACOES
                 // :: -1 SIGNIFICA QUE O PARAMETRO NAO EXISTE PARA A OPERACAO DEFINIDA
-                new Word(Opcode.LDI, 0, -1, 999),
-                new Word(Opcode.STD, 0, -1, 10),
-                new Word(Opcode.STD, 0, -1, 11),
-                new Word(Opcode.STD, 0, -1, 12),
-                new Word(Opcode.STD, 0, -1, 13),
-                new Word(Opcode.STD, 0, -1, 14),
+                new Word(Opcode.LDI, 0, -1, 900),
+                new Word(Opcode.STD, 0, -1, 1),
+                new Word(Opcode.STD, 0, -1, 2),
+                new Word(Opcode.STD, 0, -1, 3),
+                new Word(Opcode.STD, 0, -1, 4),
+                new Word(Opcode.STD, 0, -1, 5),
                 new Word(Opcode.STOP, -1, -1, -1)
         };
 
@@ -333,15 +333,15 @@ public class Programs {
 
         public Word[] paInput = new Word[] {
                 new Word(Opcode.LDI, 8, -1, 1), // 0
-                new Word(Opcode.LDI, 9, -1, 51), // 1
+                new Word(Opcode.LDI, 9, -1, 21), // 1
                 new Word(Opcode.TRAP, -1, -1, -1), // 2
-                new Word(Opcode.LDD, 0, -1, 51), // 3 carrega o valor 5 no registrador 0
-                new Word(Opcode.STD, 0, -1, 37), // 4 pega o valor do r0 e coloca na posição 37 da memória
-                new Word(Opcode.LDD, 1, -1, 37), // 5 pega o valor da posição 37 da memória e coloca em r1
+                new Word(Opcode.LDD, 0, -1, 21), // 3 carrega o valor 5 no registrador 0
+                new Word(Opcode.STD, 0, -1, 17), // 4 pega o valor do r0 e coloca na posição 37 da memória
+                new Word(Opcode.LDD, 1, -1, 17), // 5 pega o valor da posição 37 da memória e coloca em r1
                 new Word(Opcode.SUBI, 1, -1, 1), // 6 subtrai 1 do valor que entrou (no caso 5), por conta do
                                                          // zero: 0-4
                                                          // (5 valores)
-                new Word(Opcode.LDI, 2, -1, 900), // 7 registrador que vai controlar o incremento de posição de
+                new Word(Opcode.LDI, 2, -1, 41), // 7 registrador que vai controlar o incremento de posição de
                                                           // memória
                 new Word(Opcode.LDI, 7, -1, 27), // 8 carrega o valor 28 no registrador 7
                 new Word(Opcode.JMPIL, 7, 1, -1), // 9 verifica se o valor no r1 é menor que 0, se sim, pula p/
@@ -386,12 +386,12 @@ public class Programs {
 
         public Word[] pbOutput = new Word[] {
                 new Word(Opcode.LDI, 0, -1, 3), // 0 carrega o valor 3 no r0
-                new Word(Opcode.STD, 0, -1, 36), // 1 carrega o valor do r0 na posição 36 da memória
-                new Word(Opcode.LDD, 1, -1, 36), // 2 pega o valor da posição 36 da memória e coloca em r1 (3)
+                new Word(Opcode.STD, 0, -1, 26), // 1 carrega o valor do r0 na posição 36 da memória
+                new Word(Opcode.LDD, 1, -1, 26), // 2 pega o valor da posição 36 da memória e coloca em r1 (3)
                 new Word(Opcode.LDI, 5, -1, 13), // 3 carrega o valor 12 no r5
                 new Word(Opcode.JMPIL, 5, 1, -1), // 4 se o que tem no registrador r1 for menor que 0, pula pra
                                                           // instrução guardada no r5 (12), se não, segue
-                new Word(Opcode.LDD, 2, -1, 36), // 5 carrega em r2 o mesmo valor de r1 (3)
+                new Word(Opcode.LDD, 2, -1, 26), // 5 carrega em r2 o mesmo valor de r1 (3)
                 new Word(Opcode.SUBI, 1, -1, 1), // 6 subtrai 1 do valor que tinha em r1
                 new Word(Opcode.MULT, 2, 1, -1), // 7 multiplica r1 e r2 e coloca em r2 o valor
                 new Word(Opcode.SUBI, 1, -1, 1), // 8 subtrai 1 do r1
@@ -399,14 +399,14 @@ public class Programs {
                 new Word(Opcode.JMPIG, 6, 1, -1), // 10 se for maior que 0 o que tem no r1, volta pra instrução
                                                           // 7 se
                                                           // não, segue o fluxo
-                new Word(Opcode.STD, 2, -1, 35), // 11 coloca na posição 35 da memória o resultado do fatorial,
+                new Word(Opcode.STD, 2, -1, 25), // 11 coloca na posição 35 da memória o resultado do fatorial,
                                                          // que está
                                                          // no r2
                 new Word(Opcode.JMP, -1, -1, 15), // 12 pula pro stop
                 new Word(Opcode.LDI, 1, -1, -1), // 13 carrega no r1 o valor -1
-                new Word(Opcode.STD, 1, -1, 35), // 14 coloca na posição 35 da memória o valor -1
+                new Word(Opcode.STD, 1, -1, 25), // 14 coloca na posição 35 da memória o valor -1
                 new Word(Opcode.LDI, 8, -1, 2), // 15 coloca 2 em reg 8 para criar um trap de out
-                new Word(Opcode.LDI, 9, -1, 35), // 16 coloca 6 no reg 9, ou seja a posição onde será feita a
+                new Word(Opcode.LDI, 9, -1, 25), // 16 coloca 6 no reg 9, ou seja a posição onde será feita a
                                                          // leitura
                 new Word(Opcode.TRAP, -1, -1, -1), // 17 faz o output da posição 10
                 new Word(Opcode.STOP, -1, -1, -1), // 18 termina a execução
