@@ -10,17 +10,20 @@ public class ProcessManager {
     public int frameSize;
     public MemoryManager mm;
     private static ArrayList<ProcessControlBlock> ready;
-    private ProcessControlBlock running;
     private CPU cpu;
     private int idCounter;
 
     public ProcessManager(int memSize, int frameSize, CPU cpu){ 
-        this.idCounter = 1;
+        this.idCounter = 0;
         this.cpu = cpu;
         this.memSize = memSize;
         this.frameSize = frameSize;
         this.ready = new ArrayList<ProcessControlBlock>();
         mm = new MemoryManager(memSize, frameSize);
+    }
+
+    public static void setReady(ProcessControlBlock pcb){
+        ready.add(pcb);
     }
 
     public boolean createProcess(Word[] program){
@@ -40,33 +43,39 @@ public class ProcessManager {
         }
         int id = idCounter;
         ProcessControlBlock pcb = new ProcessControlBlock(id, 0, new int[10], pageTable);
-        ready.add(pcb);
         cpu.loadPCB(pcb); //coloca processo na cpu 
+        ready.add(cpu.unloadPCB());
+        System.out.println("Process id " + id);
         idCounter++;
         return true;
     }
 
 
-    public void deallocateProcess(int processId, int[] pageTable) {
-        mm.deallocates(pageTable);
+    public void deallocateProcess(int processId) {
         for (int i = 0; i < ready.size(); i++) {
             if (ready.get(i).getId() == processId) {
+                mm.deallocates(ready.get(i).getPageTable());
                 ready.remove(i);
             }
         }
     }
 
     public void dump(int processId){
-        ProcessControlBlock aux = ready.get(processId);
-        System.out.println("PCB");
-        System.out.println("id: " + aux.getId());
-        System.out.println("pc: " + aux.getPc());
-        System.out.print("reg: ");
-        for(int i=0; i<aux.getReg().length; i++){ System.out.print(aux.getReg()[i] + " ");}
-        System.out.println();
-        System.out.print("page table: ");
-        for(int i=0; i<aux.getPageTable().length; i++){ System.out.print(aux.getPageTable()[i] + " ");}
-        System.out.println();
+        ProcessControlBlock aux = findPCB(processId);
+        if(aux == null){ System.out.println("Process not found");}
+        else{
+            System.out.println("-----------");
+            System.out.println("PCB");
+            System.out.println("id: " + aux.getId());
+            //System.out.println("pc: " + aux.getPc());
+            System.out.print("reg: ");
+            for(int i=0; i<aux.getReg().length; i++){ System.out.print(aux.getReg()[i] + " ");}
+            System.out.println();
+            System.out.print("page table: ");
+            for(int i=0; i<aux.getPageTable().length; i++){ System.out.print(aux.getPageTable()[i] + " ");}
+            System.out.println();
+            System.out.println("-----------");
+        }
     }
 
     public void dumpM(int start, int end){
@@ -77,5 +86,16 @@ public class ProcessManager {
             System.out.println();
         }
         System.out.println();
+    }
+
+    public ProcessControlBlock findPCB(int processId){
+        System.out.println("aqui");
+        ProcessControlBlock process = null;
+        for (int i = 0; i < ready.size(); i++) {
+            if (ready.get(i).getId() == processId) {
+                process = ready.get(i);
+            }
+        }
+        return process;
     }
 }

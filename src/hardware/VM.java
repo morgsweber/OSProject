@@ -13,7 +13,7 @@ public class VM {
 
     public VM() {
         memSize = 1024;
-        frameSize = 8;
+        frameSize = 16;
         m = new Word[memSize];
         for (int i = 0; i < memSize; i++) {
             m[i] = new Word(Opcode.___, -1, -1, -1);
