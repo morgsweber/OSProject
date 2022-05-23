@@ -10,7 +10,6 @@ public class ProcessManager {
     public int frameSize;
     public MemoryManager mm;
     private static ArrayList<ProcessControlBlock> ready;
-    private ProcessControlBlock running;
     private CPU cpu;
     private int idCounter;
 
@@ -21,6 +20,10 @@ public class ProcessManager {
         this.frameSize = frameSize;
         this.ready = new ArrayList<ProcessControlBlock>();
         mm = new MemoryManager(memSize, frameSize);
+    }
+
+    public static void setReady(ProcessControlBlock pcb){
+        ready.add(pcb);
     }
 
     public boolean createProcess(Word[] program){
@@ -40,8 +43,8 @@ public class ProcessManager {
         }
         int id = idCounter;
         ProcessControlBlock pcb = new ProcessControlBlock(id, 0, new int[10], pageTable);
-        ready.add(pcb);
         cpu.loadPCB(pcb); //coloca processo na cpu 
+        ready.add(cpu.unloadPCB());
         idCounter++;
         return true;
     }
@@ -60,7 +63,7 @@ public class ProcessManager {
         ProcessControlBlock aux = ready.get(processId);
         System.out.println("PCB");
         System.out.println("id: " + aux.getId());
-        System.out.println("pc: " + aux.getPc());
+        //System.out.println("pc: " + aux.getPc());
         System.out.print("reg: ");
         for(int i=0; i<aux.getReg().length; i++){ System.out.print(aux.getReg()[i] + " ");}
         System.out.println();

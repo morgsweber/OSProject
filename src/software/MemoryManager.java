@@ -58,7 +58,7 @@ public class MemoryManager {
         return physicalAddress;
     }
 
-    public static void deallocates(int[] tablePages){
+    public void deallocates(int[] tablePages){
         for (int i = 0; i < tablePages.length; i++) {
             frames[tablePages[i]] = false;
         }

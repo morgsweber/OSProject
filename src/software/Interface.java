@@ -71,11 +71,17 @@ public class Interface {
         //TODO: colocar outros ifs com outros programas
         if(code == 1){
             allocated = VM.pm.createProcess(new Programs().fibonacci10);
-            if(allocated){ cpu.run(); }
+            if(allocated){ 
+                cpu.run(); 
+                VM.pm.setReady(cpu.unloadPCB());
+            }
         }
         else if(code == 2){
             allocated = VM.pm.createProcess(new Programs().fatorial);
-            if(allocated){ cpu.run(); }
+            if(allocated){ 
+                cpu.run(); 
+                VM.pm.setReady(cpu.unloadPCB());
+            }
         }
         else if(code == 3){
             allocated = VM.pm.createProcess(new Programs().pa);
