@@ -18,6 +18,8 @@ public class Interface {
         System.out.println("----------- Operation System Simulator -----------");
         System.out.println("----------- 1 - Fibonacci              -----------");
         System.out.println("----------- 2 - Factorial              -----------");
+        System.out.println("----------- 3 - PA                     -----------");
+        System.out.println("----------- 4 - PB                     -----------");
         System.out.println("-----------                            -----------");
         System.out.println("###########     INSTRUCTIONS:          ###########");
         System.out.println("----------- exec <id>                  -----------");
@@ -33,7 +35,7 @@ public class Interface {
             int id = Integer.parseInt(readLine.split(" ")[1]);
 
             //TODO: adicionar outros comandos no if
-            if(id != 0 && id != 1  && id != 2){
+            if(id != 0 && id != 1  && id != 2 && id != 3  && id != 4){
                 System.out.println("Invalid program id");
             }
             else{
@@ -73,6 +75,14 @@ public class Interface {
         }
         else if(code == 2){
             allocated = VM.pm.createProcess(new Programs().fatorial);
+            if(allocated){ cpu.run(); }
+        }
+        else if(code == 3){
+            allocated = VM.pm.createProcess(new Programs().pa);
+            if(allocated){ cpu.run(); }
+        }
+        else if(code == 4){
+            allocated = VM.pm.createProcess(new Programs().pb);
             if(allocated){ cpu.run(); }
         }
         if(!allocated){ System.out.println("Memory unavailable to create process"); }

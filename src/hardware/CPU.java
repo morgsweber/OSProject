@@ -26,8 +26,8 @@ public class CPU {
         return pageTable;
     }
 
-    public boolean overFlowInterrupt(int valor) {
-        if (valor > -2147483647 && valor < 2147483647) {
+    public boolean overFlowInterrupt(int value) {
+        if (value > -2147483647 && value < 2147483647) {
             return true;
         }
         interruption = Interruptions.OverFlow;
@@ -76,26 +76,26 @@ public class CPU {
             if (interruption != Interruptions.NoInterruptions) {
                 switch (interruption) {
                     case OverFlow:
-                        System.out.println("----------Interrupção do tipo: Overflow----------");
+                        System.out.println("----------Type Interruption: Overflow----------");
                         break;
                     case InvalidAdress:
-                        System.out.println("----------Interrupção do tipo: Endereço Inválido----------");
+                        System.out.println("----------Type Interruption: Endereço Inválido----------");
                         break;
                     case InvalidInstruction:
-                        System.out.println("----------Interrupção do tipo: Instrução Inválida----------");
+                        System.out.println("----------Type Interruption: Instrução Inválida----------");
                         break;
                     case SystemCall:
                         Scanner in = new Scanner(System.in);
 
                         if (reg[8]==1){
                             int destino = reg[9];
-                            System.out.println("Insira um número inteiro: ");
+                            System.out.println("Enter an integer value: ");
                             int value = in.nextInt();
                             m[destino].p = value;
                         }
                         if (reg[8]==2){
                             int ec = reg[9];
-                            System.out.println("Retorno: " + m[ec].p);
+                            System.out.println("Return: " + m[ec].p);
                         }
                         interruption = Interruptions.NoInterruptions;
                         continue;
