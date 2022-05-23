@@ -1,18 +1,29 @@
 package hardware;
 import java.util.Scanner;
 
+import software.MemoryManager;
+import software.ProcessControlBlock;
+
 public class CPU {
     private int pc; 
     private Word ir; 
     private int[] reg;
     private Interruptions interruption;
+    private int[] pageTable;
+    private int currentProcessId;
 
     private Word[] m; 
 
     public CPU(Word[] _m) { 
         m = _m; 
         reg = new int[10]; 
+        pageTable = null;
         interruption = Interruptions.NoInterruptions;
+        this.currentProcessId = -1;
+    }
+
+    public int[] getPageTable(){
+        return pageTable;
     }
 
     public boolean overFlowInterrupt(int valor) {
@@ -91,7 +102,8 @@ public class CPU {
                 }
                 break;
             }
-            ir = m[pc]; 
+            int physicalAddress;
+            ir =  m[MemoryManager.translate(pc, pageTable)];; 
             //showState();
             switch (ir.opc) {
                 case JMP:
@@ -140,17 +152,19 @@ public class CPU {
                     break;
 
                 case JMPIM:
-                    if (invalidAdressInterrupt(ir.p)) {
-                        m[ir.p].opc = Opcode.DATA;
-                        pc = m[ir.p].p; 
+                    physicalAddress = MemoryManager.translate(ir.p, pageTable);
+                    if (invalidAdressInterrupt(physicalAddress)) {
+                        m[physicalAddress].opc = Opcode.DATA;
+                        pc = m[physicalAddress].p; 
                     }
                     break;
 
                 case JMPIGM: 
-                    if (invalidAdressInterrupt(ir.p)) {
+                    physicalAddress = MemoryManager.translate(ir.p, pageTable);
+                    if (invalidAdressInterrupt(physicalAddress)) {
                         if (reg[ir.r2] > 0) {
-                            m[ir.p].opc = Opcode.DATA;
-                            pc = m[ir.p].p;
+                            m[physicalAddress].opc = Opcode.DATA;
+                            pc = m[physicalAddress].p;
                         } else {
                             pc++;
                         }
@@ -158,10 +172,11 @@ public class CPU {
                     break;
 
                 case JMPILM: 
-                    if (invalidAdressInterrupt(ir.p)) {
+                    physicalAddress = MemoryManager.translate(ir.p, pageTable);
+                    if (invalidAdressInterrupt(physicalAddress)) {
                         if (reg[ir.r2] < 0) {
-                            m[ir.p].opc = Opcode.DATA;
-                            pc = m[ir.p].p;
+                            m[physicalAddress].opc = Opcode.DATA;
+                            pc = m[physicalAddress].p;
                         } else {
                             pc++;
                         }
@@ -169,10 +184,11 @@ public class CPU {
                     break;
 
                 case JMPIEM: 
-                    if (invalidAdressInterrupt(ir.p)) {
+                    physicalAddress = MemoryManager.translate(ir.p, pageTable);
+                    if (invalidAdressInterrupt(physicalAddress)) {
                         if (reg[ir.r2] == 0) {
-                            m[ir.p].opc = Opcode.DATA;
-                            pc = m[ir.p].p;
+                            m[physicalAddress].opc = Opcode.DATA;
+                            pc = m[physicalAddress].p;
                         } else {
                             pc++;
                         }
@@ -225,25 +241,28 @@ public class CPU {
                     break;
 
                 case LDD: 
-                    if (invalidAdressInterrupt(ir.p) && overFlowInterrupt(m[ir.p].p)) {
-                        m[ir.p].opc = Opcode.DATA;
-                        reg[ir.r1] = m[ir.p].p;
+                    physicalAddress = MemoryManager.translate(ir.p, pageTable);
+                    if (invalidAdressInterrupt(physicalAddress) && overFlowInterrupt(m[ir.p].p)) {
+                        m[physicalAddress].opc = Opcode.DATA;
+                        reg[ir.r1] = m[physicalAddress].p;
                         pc++;
                     }
                     break;
 
                 case LDX: 
-                    if (invalidAdressInterrupt(reg[ir.r2]) && overFlowInterrupt(reg[ir.r1])) {
-                        m[ir.r2].opc = Opcode.DATA;
-                        reg[ir.r1] = m[reg[ir.r2]].p;
+                    physicalAddress = MemoryManager.translate(reg[ir.r2], pageTable);
+                    if (invalidAdressInterrupt(reg[physicalAddress]) && overFlowInterrupt(reg[ir.r1])) {
+                        m[physicalAddress].opc = Opcode.DATA;
+                        reg[ir.r1] = m[physicalAddress].p;
                         pc++;
                     }
                     break;
 
                 case STX: 
-                    if (invalidAdressInterrupt(reg[ir.r1]) && overFlowInterrupt(reg[ir.r2])) {
-                        m[reg[ir.r1]].opc = Opcode.DATA;
-                        m[reg[ir.r1]].p = reg[ir.r2];
+                    physicalAddress = MemoryManager.translate(reg[ir.r1], pageTable);
+                    if (invalidAdressInterrupt(physicalAddress) && overFlowInterrupt(reg[ir.r2])) {
+                        m[physicalAddress].opc = Opcode.DATA;
+                        m[physicalAddress].p = reg[ir.r2];
                         pc++;
                     }
                     break;
@@ -256,9 +275,10 @@ public class CPU {
                     break;
 
                 case STD: 
-                    if (invalidAdressInterrupt(ir.p) && overFlowInterrupt(m[ir.p].p)) {
-                        m[ir.p].opc = Opcode.DATA;
-                        m[ir.p].p = reg[ir.r1];
+                    physicalAddress = MemoryManager.translate(ir.p, pageTable);
+                    if (invalidAdressInterrupt(physicalAddress) && overFlowInterrupt(m[physicalAddress].p)) {
+                        m[physicalAddress].opc = Opcode.DATA;
+                        m[physicalAddress].p = reg[ir.r1];
                         pc++;
                     }
                     break;
@@ -269,6 +289,7 @@ public class CPU {
                     reg[ir.r2] = t;
                     pc++;
                     break;
+
                 case TRAP:
                     interruption = Interruptions.SystemCall;
                     pc ++;
@@ -288,4 +309,15 @@ public class CPU {
             }*/
         }
     }
+
+    public void loadPCB(ProcessControlBlock pcb) {
+        this.currentProcessId = pcb.getId();
+		this.pc = pcb.getPc();
+		this.reg = pcb.getReg().clone();
+		this.pageTable = pcb.getPageTable().clone();
+	}
+
+	public ProcessControlBlock unloadPCB() {
+		return new ProcessControlBlock(currentProcessId, pc, reg.clone(), pageTable.clone());
+	}
 }

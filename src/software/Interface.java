@@ -1,8 +1,15 @@
 package software;
 import java.util.Scanner;
+
+import hardware.CPU;
 import hardware.VM;
 
 public class Interface {
+    private CPU cpu;
+
+    public Interface(CPU cpu){
+        this.cpu = cpu;
+    }
     Scanner in = new Scanner(System.in);
 
     public void run(){
@@ -38,10 +45,11 @@ public class Interface {
                         VM.pm.dump(id);
                         break;
                     case "dumpM":
-                        VM.pm.dumpM();
+                        int end = Integer.parseInt(readLine.split(" ")[2]);
+                        VM.pm.dumpM(id, end);
                         break;
                     case "dealocate":
-                        VM.pm.deallocateProcess(id);
+                        VM.pm.deallocateProcess(id, cpu.getPageTable());
                         break;
                     case "exit":
                         System.out.println("Ending system");
@@ -61,9 +69,11 @@ public class Interface {
         //TODO: colocar outros ifs com outros programas
         if(code == 1){
             allocated = VM.pm.createProcess(new Programs().fibonacci10);
+            if(allocated){ cpu.run(); }
         }
         else if(code == 2){
             allocated = VM.pm.createProcess(new Programs().fatorial);
+            if(allocated){ cpu.run(); }
         }
         if(!allocated){ System.out.println("Memory unavailable to create process"); }
     }
