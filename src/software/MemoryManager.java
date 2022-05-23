@@ -1,16 +1,23 @@
 package software;
 
+import java.util.ArrayList;
+
 public class MemoryManager {
     public int memorySize;
-    public int pageSize;
+    public static int pageSize;
     public int memoryFrames;
-    public boolean[] frames;
+    public static boolean[] frames;
 
     public MemoryManager(int memorySize, int pageSize) {
         this.memorySize = memorySize;
         this.pageSize = pageSize;
         this.memoryFrames = memorySize/pageSize;
         this.frames = new boolean[memoryFrames];
+        frames[2] = true;
+        frames[3] = true;
+        frames[4] = true;
+        frames[10] = true; 
+        frames[11] = true;
     }
 
     public int[] allocate(int wordNum){
@@ -22,22 +29,36 @@ public class MemoryManager {
         else { pageNum = wordNum/pageSize + 1; }
 
         int[] pagesTable = new int [pageNum];
+        ArrayList<Integer> aux = new ArrayList<>();
         for (int i = 0; i < frames.length; i++) {
             if(count == pageNum){ break; }
             else if(!frames[i]){
-                pagesTable[count] = i;
+                aux.add(i);
                 count++;
-                frames[i] = true;
             }
         }
-        
+        if(count == pageNum){
+            for(int i=0; i < aux.size(); i++){
+                pagesTable[i] = aux.get(i);
+                frames[aux.get(i)] = true;
+            }
+        }
+
         if(count < pageNum){
             return null;
         }
         return pagesTable;
     }
 
-    public void deallocates(int[] tablePages){
+    public static int translate(int logicAddress, int[] pageTable) {
+        int pageIndex = logicAddress/pageSize;
+        int offset = logicAddress % pageSize;
+        int physicalAddress = (pageTable[pageIndex] * pageSize) + offset;
+
+        return physicalAddress;
+    }
+
+    public static void deallocates(int[] tablePages){
         for (int i = 0; i < tablePages.length; i++) {
             frames[tablePages[i]] = false;
         }
