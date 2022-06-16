@@ -9,20 +9,24 @@ public class ProcessManager {
     public int memSize;
     public int frameSize;
     public MemoryManager mm;
-    private static ArrayList<ProcessControlBlock> ready;
+    private  ArrayList<ProcessControlBlock> ready;
+    private ArrayList<ProcessControlBlock> blocked;
+    private ProcessControlBlock running; 
     private CPU cpu;
+    
     private int idCounter;
 
-    public ProcessManager(int memSize, int frameSize, CPU cpu){ 
+    public ProcessManager(int memSize, int frameSize, CPU cpu, Scheduler Scheduler){ 
         this.idCounter = 0;
         this.cpu = cpu;
         this.memSize = memSize;
         this.frameSize = frameSize;
         this.ready = new ArrayList<ProcessControlBlock>();
+        this.blocked = new ArrayList<ProcessControlBlock>();
         mm = new MemoryManager(memSize, frameSize);
     }
 
-    public static void setReady(ProcessControlBlock pcb){
+    public void setReady(ProcessControlBlock pcb){
         ready.add(pcb);
     }
 
@@ -67,7 +71,7 @@ public class ProcessManager {
             System.out.println("-----------");
             System.out.println("PCB");
             System.out.println("id: " + aux.getId());
-            //System.out.println("pc: " + aux.getPc());
+            System.out.println("pc: " + aux.getPc());
             System.out.print("reg: ");
             for(int i=0; i<aux.getReg().length; i++){ System.out.print(aux.getReg()[i] + " ");}
             System.out.println();
@@ -89,7 +93,6 @@ public class ProcessManager {
     }
 
     public ProcessControlBlock findPCB(int processId){
-        System.out.println("aqui");
         ProcessControlBlock process = null;
         for (int i = 0; i < ready.size(); i++) {
             if (ready.get(i).getId() == processId) {

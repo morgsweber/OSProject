@@ -5,10 +5,10 @@ import java.util.Scanner;
 import hardware.CPU;
 import hardware.VM;
 
-public class Interface {
+public class Shell extends Thread{
     private CPU cpu;
 
-    public Interface(CPU cpu) {
+    public Shell(CPU cpu) {
         this.cpu = cpu;
     }
 

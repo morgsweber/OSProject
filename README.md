@@ -9,7 +9,22 @@ Gustavo G. Lottermann, Morgana Luiza Weber, Eduardo Berwanger
 
 
 
+    //therad tem o estado da cpu 
 
+
+
+    /* delta = 5 
+     * loop{
+     *  fetch exec 
+     * ciclos ++
+     * if ciclos == delta: 
+     *   zera ciclos e liga int 0? 
+     * 
+     * testa interrupção
+     * 
+     * }
+     * 
+    */
 
 
 

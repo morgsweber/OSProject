@@ -6,7 +6,7 @@ public class MemoryManager {
     public int memorySize;
     public static int pageSize;
     public int memoryFrames;
-    public static boolean[] frames;
+    public boolean[] frames;
 
     public MemoryManager(int memorySize, int pageSize) {
         this.memorySize = memorySize;

@@ -4,7 +4,7 @@ import java.util.Scanner;
 import software.MemoryManager;
 import software.ProcessControlBlock;
 
-public class CPU {
+public class CPU extends Thread{
     private int pc; 
     private Word ir; 
     private int[] reg;
@@ -13,8 +13,10 @@ public class CPU {
     private int currentProcessId;
 
     private Word[] m; 
+    private int delta;
 
     public CPU(Word[] _m) { 
+        delta = 3;
         m = _m; 
         reg = new int[10]; 
         pageTable = null;
@@ -46,31 +48,6 @@ public class CPU {
         pc = _pc;
     }
 
-    private void dump(Word w) {
-        System.out.print("[ ");
-        System.out.print(w.opc);
-        System.out.print(", ");
-        System.out.print(w.r1);
-        System.out.print(", ");
-        System.out.print(w.r2);
-        System.out.print(", ");
-        System.out.print(w.p);
-        System.out.println("  ] ");
-    }
-
-    private void showState() {
-        System.out.println("       " + pc);
-        System.out.print("           ");
-        for (int i = 0; i < 10; i++) {
-            System.out.print("r" + i);
-            System.out.print(": " + reg[i] + "     ");
-        }
-        ;
-        System.out.println("");
-        System.out.print("           ");
-        dump(ir);
-    }
-
     public void run() {
         while (true) {
             if (interruption != Interruptions.NoInterruptions) {
@@ -99,12 +76,13 @@ public class CPU {
                         }
                         interruption = Interruptions.NoInterruptions;
                         continue;
+                    default:
+                        break;
                 }
                 break;
             }
             int physicalAddress;
             ir =  m[MemoryManager.translate(pc, pageTable)];; 
-            //showState();
             switch (ir.opc) {
                 case JMP:
                     if (invalidAdressInterrupt(ir.p)) {

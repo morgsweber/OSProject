@@ -1,6 +1,7 @@
 package hardware;
-import software.Interface;
+import software.Shell;
 import software.ProcessManager;
+import software.Scheduler;
 
 public class VM {
     public Word[] p;
@@ -9,7 +10,8 @@ public class VM {
     public static Word[] m;
     public CPU cpu;
     public static ProcessManager pm;
-    public Interface i;
+    public Shell shell;
+    public Scheduler scheduler;
 
     public VM() {
         memSize = 1024;
@@ -18,12 +20,16 @@ public class VM {
         for (int i = 0; i < memSize; i++) {
             m[i] = new Word(Opcode.___, -1, -1, -1);
         }
-        cpu = new CPU(m);
-        i = new Interface(cpu);
-        pm = new ProcessManager(memSize, frameSize, cpu);
+        cpu = new CPU(m); //thread que fica em looping: semáforo da CPU.wait(), semáforo inicializado em 0
+        shell = new Shell(cpu);
+        scheduler = new Scheduler(); //seta o estado da CPU 
+        pm = new ProcessManager(memSize, frameSize, cpu, scheduler);
     }
 
+
     public void run() {
-        i.run();   
+        shell.start();
+        cpu.start();
+        scheduler.start();
     }
 }
