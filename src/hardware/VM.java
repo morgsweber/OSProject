@@ -20,12 +20,11 @@ public class VM {
         for (int i = 0; i < memSize; i++) {
             m[i] = new Word(Opcode.___, -1, -1, -1);
         }
-        cpu = new CPU(m); //thread que fica em looping: semáforo da CPU.wait(), semáforo inicializado em 0
+        cpu = new CPU(m);
         shell = new Shell(cpu);
-        scheduler = new Scheduler(); //seta o estado da CPU 
+        scheduler = new Scheduler(cpu); 
         pm = new ProcessManager(memSize, frameSize, cpu, scheduler);
     }
-
 
     public void run() {
         shell.start();

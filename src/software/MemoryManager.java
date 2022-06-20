@@ -1,10 +1,9 @@
 package software;
 import hardware.VM;
 import hardware.Opcode;
-
 public class MemoryManager {
     public int memorySize;
-    public static int pageSize;
+    private int pageSize;
     public int memoryFrames;
     public boolean[] frames;
 
@@ -18,6 +17,10 @@ public class MemoryManager {
         frames[4] = true;
         frames[10] = true; 
         frames[11] = true;
+    }
+
+    public int getPageSize(){
+        return pageSize;
     }
 
     public int[] allocate(int wordNum){
@@ -46,10 +49,10 @@ public class MemoryManager {
         return pagesTable;
     }
 
-    public static int translate(int logicAddress, int[] pageTable) {
-        int pageIndex = logicAddress/pageSize;
-        int offset = logicAddress % pageSize;
-        int physicalAddress = (pageTable[pageIndex] * pageSize) + offset;
+    public int translate(int logicAddress, int[] pageTable) {
+        int pageIndex = logicAddress/getPageSize();
+        int offset = logicAddress % getPageSize();
+        int physicalAddress = (pageTable[pageIndex] * getPageSize()) + offset;
 
         return physicalAddress;
     }

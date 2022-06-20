@@ -9,9 +9,9 @@ public class ProcessManager {
     public int memSize;
     public int frameSize;
     public MemoryManager mm;
-    private  ArrayList<ProcessControlBlock> ready;
-    private ArrayList<ProcessControlBlock> blocked;
-    private ProcessControlBlock running; 
+    public static  ArrayList<ProcessControlBlock> READY = new ArrayList<ProcessControlBlock>();
+    public static  ArrayList<ProcessControlBlock> BLOCKED = new ArrayList<ProcessControlBlock>();;
+    public static ProcessControlBlock RUNNING; 
     private CPU cpu;
     
     private int idCounter;
@@ -21,13 +21,11 @@ public class ProcessManager {
         this.cpu = cpu;
         this.memSize = memSize;
         this.frameSize = frameSize;
-        this.ready = new ArrayList<ProcessControlBlock>();
-        this.blocked = new ArrayList<ProcessControlBlock>();
         mm = new MemoryManager(memSize, frameSize);
     }
 
     public void setReady(ProcessControlBlock pcb){
-        ready.add(pcb);
+        READY.add(pcb);
     }
 
     public boolean createProcess(Word[] program){
@@ -48,7 +46,7 @@ public class ProcessManager {
         int id = idCounter;
         ProcessControlBlock pcb = new ProcessControlBlock(id, 0, new int[10], pageTable);
         cpu.loadPCB(pcb); //coloca processo na cpu 
-        ready.add(cpu.unloadPCB());
+        READY.add(cpu.unloadPCB());
         System.out.println("Process id " + id);
         idCounter++;
         return true;
@@ -56,10 +54,10 @@ public class ProcessManager {
 
 
     public void deallocateProcess(int processId) {
-        for (int i = 0; i < ready.size(); i++) {
-            if (ready.get(i).getId() == processId) {
-                mm.deallocates(ready.get(i).getPageTable());
-                ready.remove(i);
+        for (int i = 0; i < READY.size(); i++) {
+            if (READY.get(i).getId() == processId) {
+                mm.deallocates(READY.get(i).getPageTable());
+                READY.remove(i);
             }
         }
     }
@@ -94,11 +92,20 @@ public class ProcessManager {
 
     public ProcessControlBlock findPCB(int processId){
         ProcessControlBlock process = null;
-        for (int i = 0; i < ready.size(); i++) {
-            if (ready.get(i).getId() == processId) {
-                process = ready.get(i);
+        for (int i = 0; i < READY.size(); i++) {
+            if (READY.get(i).getId() == processId) {
+                process = READY.get(i);
             }
         }
         return process;
+    }
+
+    public static ProcessControlBlock findBlockedPCB(int id) {
+        for (int i = 0; i < BLOCKED.size(); i++) {
+            if (BLOCKED.get(i).getId() == id) {
+                return BLOCKED.remove(i);
+            }
+        }
+        return null;
     }
 }

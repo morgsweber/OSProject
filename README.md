@@ -2,7 +2,7 @@
 
 **Nome dos integrantes:**
 
-Gustavo G. Lottermann, Morgana Luiza Weber, Eduardo Berwanger
+Gustavo G. Lottermann, Morgana Luiza Weber
 
 
 ## Entrega 2
