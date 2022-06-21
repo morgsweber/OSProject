@@ -54,7 +54,7 @@ public class Shell extends Thread{
                     VM.pm.dumpM(id, end);
                     break;
                 case "deallocate":
-                    VM.pm.deallocateProcess(id);
+                    VM.pm.deallocateProcess(id, cpu.getPageTable());
                     break;
                 case "exit":
                     System.out.println("Ending system");

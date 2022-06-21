@@ -22,7 +22,7 @@ public class CPU extends Thread{
     private MemoryManager mm;
 
     public CPU(Word[] _m) { 
-        delta = 3;
+        delta = 5;
         m = _m; 
         reg = new int[10]; 
         pageTable = null;
@@ -68,7 +68,7 @@ public class CPU extends Thread{
     //arthur
     private void endProcess() {
         if (ProcessManager.RUNNING != null) {
-            ProcessManager.destroyProcess(getCurrentProcessId(), getPageTable());
+            ProcessManager.deallocateProcess(currentProcessId, getPageTable());
             ProcessManager.RUNNING = null;
         }
         interruption = Interruptions.NoInterruptions;
@@ -371,7 +371,7 @@ public class CPU extends Thread{
             }
 
 
-			if (aux  == delta) {
+			if (interruption == Interruptions.NoInterruptions && aux  == delta) {
                 interruption = Interruptions.ClockInterrupt;
                 break;
             }

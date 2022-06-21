@@ -49,15 +49,25 @@ public class ProcessManager {
         READY.add(cpu.unloadPCB());
         System.out.println("Process id " + id);
         idCounter++;
+
+        if(READY.size() == 1 && RUNNING == null) {
+            Scheduler.SEMAPHORE.release();
+        }
         return true;
     }
 
 
-    public void deallocateProcess(int processId) {
+    public void deallocateProcess(int processId, int[] pageTable) {
+        mm.deallocates(pageTable);
         for (int i = 0; i < READY.size(); i++) {
             if (READY.get(i).getId() == processId) {
                 mm.deallocates(READY.get(i).getPageTable());
                 READY.remove(i);
+            }
+        }
+        for(int i = 0; i < BLOCKED.size(); i++){
+            if(BLOCKED.get(i).getId() == processId){
+                BLOCKED.remove(i);
             }
         }
     }
