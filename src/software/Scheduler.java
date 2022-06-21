@@ -19,8 +19,7 @@ public class Scheduler extends Thread {
                     ProcessManager.RUNNING = ProcessManager.READY.get(0);
                     ProcessManager.READY.remove(0);
                     ProcessControlBlock nextProccess = ProcessManager.RUNNING;
-                    System.out.println("\n Scheduling process with id = " + nextProccess.getId() + " ["
-                            + ProcessManager.findBlockedPCB(nextProccess.getId()) + "]\n");
+                    System.out.println("\n Scheduling process with id = " + nextProccess.getId());
                     cpu.loadPCB(nextProccess);
                     cpu.SEMAPHORE.release();
                 }

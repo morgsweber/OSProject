@@ -4,6 +4,7 @@ import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 
 import hardware.CPU;
+import hardware.Interruptions;
 
 public class Console extends Thread {
 
@@ -11,6 +12,7 @@ public class Console extends Thread {
 
     private CPU cpu;
     private Scanner reader;
+    public Interruptions interrupt;
 
     public static ArrayList<IORequest> IO_REQUESTS = new ArrayList<>();
     public static ArrayList<Integer> FINISHED_IO_PROCESS_IDS = new ArrayList<>();
@@ -57,7 +59,7 @@ public class Console extends Thread {
         addFinishedIOProcessId(process.getId());
         removeIORequest(process.getId());
         if (ProcessManager.READY.size() <= 0) {
-            cpu.getInterruption().noOtherProcessRunningRoutine();
+            interrupt.noOtherProcessRunningRoutine();
         }
     }
 
@@ -71,7 +73,7 @@ public class Console extends Thread {
         addFinishedIOProcessId(process.getId());
         removeIORequest(process.getId());
         if (ProcessManager.READY.size() <= 0) {
-            cpu.getInterruption().noOtherProcessRunningRoutine();
+            interrupt.noOtherProcessRunningRoutine();
         }
     }
 

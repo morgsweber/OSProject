@@ -47,8 +47,12 @@ public class ProcessManager {
         ProcessControlBlock pcb = new ProcessControlBlock(id, 0, new int[10], pageTable);
         cpu.loadPCB(pcb); //coloca processo na cpu 
         READY.add(cpu.unloadPCB());
-        System.out.println("Process id " + id);
+        System.out.println("Process id " + id + " created");
         idCounter++;
+
+        if (READY.size() == 1 && RUNNING == null) {
+            Scheduler.SEMAPHORE.release();
+        }
         return true;
     }
 

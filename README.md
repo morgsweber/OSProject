@@ -1,4 +1,2 @@
-**Nome dos integrantes:**
-
-Gustavo G. Lottermann, Morgana Luiza Weber
+**Nome dos integrantes:** Gustavo G. Lottermann, Morgana Luiza Weber
 
