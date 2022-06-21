@@ -90,7 +90,7 @@ public class ProcessManager {
         System.out.println();
     }
 
-    public ProcessControlBlock findPCB(int processId){
+    public static ProcessControlBlock findPCB(int processId){
         ProcessControlBlock process = null;
         for (int i = 0; i < READY.size(); i++) {
             if (READY.get(i).getId() == processId) {
@@ -107,5 +107,19 @@ public class ProcessManager {
             }
         }
         return null;
+    }
+
+    public static void destroyProcess(int processId, int[] pageTable) {
+        MemoryManager.deallocates(pageTable);
+        for (int i = 0; i < READY.size(); i++) {
+            if (READY.get(i).getId() == processId) {
+                READY.remove(i);
+            }
+        }
+        for (int i = 0; i < BLOCKED.size(); i++) {
+            if (BLOCKED.get(i).getId() == processId) {
+                BLOCKED.remove(i);
+            }
+        }
     }
 }

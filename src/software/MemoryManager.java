@@ -3,9 +3,9 @@ import hardware.VM;
 import hardware.Opcode;
 public class MemoryManager {
     public int memorySize;
-    private int pageSize;
+    private static int pageSize;
     public int memoryFrames;
-    public boolean[] frames;
+    public static boolean[] frames;
 
     public MemoryManager(int memorySize, int pageSize) {
         this.memorySize = memorySize;
@@ -19,7 +19,7 @@ public class MemoryManager {
         frames[11] = true;
     }
 
-    public int getPageSize(){
+    public static int getPageSize(){
         return pageSize;
     }
 
@@ -49,7 +49,7 @@ public class MemoryManager {
         return pagesTable;
     }
 
-    public int translate(int logicAddress, int[] pageTable) {
+    public static int translate(int logicAddress, int[] pageTable) {
         int pageIndex = logicAddress/getPageSize();
         int offset = logicAddress % getPageSize();
         int physicalAddress = (pageTable[pageIndex] * getPageSize()) + offset;
@@ -57,7 +57,7 @@ public class MemoryManager {
         return physicalAddress;
     }
 
-    public void deallocates(int[] tablePages){
+    public static void deallocates(int[] tablePages){
         for (int i = 0; i < tablePages.length; i++) {
             frames[tablePages[i]] = false;
             for (int j = pageSize * tablePages[i]; j < pageSize * (tablePages[i] + 1); j++) {

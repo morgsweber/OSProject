@@ -1,5 +1,6 @@
 package hardware;
 import software.Shell;
+import software.Console;
 import software.ProcessManager;
 import software.Scheduler;
 
@@ -12,6 +13,7 @@ public class VM {
     public static ProcessManager pm;
     public Shell shell;
     public Scheduler scheduler;
+    public Console console;
 
     public VM() {
         memSize = 1024;
@@ -23,6 +25,7 @@ public class VM {
         cpu = new CPU(m);
         shell = new Shell(cpu);
         scheduler = new Scheduler(cpu); 
+        console = new Console(cpu);
         pm = new ProcessManager(memSize, frameSize, cpu, scheduler);
     }
 
@@ -30,5 +33,6 @@ public class VM {
         shell.start();
         cpu.start();
         scheduler.start();
+        console.start();
     }
 }

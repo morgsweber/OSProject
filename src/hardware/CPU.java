@@ -1,8 +1,9 @@
 package hardware;
-import java.io.Console;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 
+import software.Console;
 import software.MemoryManager;
 import software.ProcessControlBlock;
 import software.ProcessManager;
@@ -17,7 +18,7 @@ public class CPU extends Thread{
     private int currentProcessId;
     public Semaphore SEMAPHORE = new Semaphore(0);
 
-    private Word[] m; 
+    public Word[] m; 
     private int delta;
     private MemoryManager mm;
 
@@ -32,6 +33,14 @@ public class CPU extends Thread{
 
     public int[] getPageTable(){
         return pageTable;
+    }
+
+    public int getCurrentProcessId(){
+        return currentProcessId;
+    }
+
+    public Interruptions getInterruption(){
+        return interruption;
     }
 
     public boolean overFlowInterrupt(int value) {
@@ -77,11 +86,12 @@ public class CPU extends Thread{
         }
     }
 
+
     //arthur
     private void ioFinishedRoutine() {
         ProcessManager.RUNNING = null;
         int finishedIOProcessId = Console.getFirstFinishedIOProcessId();
-        ProcessControlBlock finishedIOProcess = ProcessManager.findBlockedProcessById(finishedIOProcessId);
+        ProcessControlBlock finishedIOProcess = ProcessManager.findBlockedPCB(finishedIOProcessId);
         ProcessControlBlock interruptedProcess = unloadPCB();
         ProcessManager.READY.add(interruptedProcess);
         interruption = Interruptions.NoInterruptions;
@@ -89,13 +99,13 @@ public class CPU extends Thread{
 
         int physicalAddress = MemoryManager.translate(finishedIOProcess.getReg()[8], finishedIOProcess.getPageTable());
         if (finishedIOProcess.getReg()[7] == 1) {
-            cpu.m[physicalAddress].opc = Opcode.DATA;
-            cpu.m[physicalAddress].p = finishedIOProcess.getIOValue();
+            m[physicalAddress].opc = Opcode.DATA;
+            m[physicalAddress].p = finishedIOProcess.getIo();
         } else {
             System.out.println(
                     "\n[Output from process with ID = " + finishedIOProcess.getId() + " - "
-                            + ProcessManager.getProgramNameByProcessId(finishedIOProcess.getId()) + "] "
-                            + finishedIOProcess.getIOValue()
+                            + ProcessManager.findPCB(finishedIOProcess.getId()) + "] "
+                            + finishedIOProcess.getIo()
                             + "\n");
         }
 
@@ -103,6 +113,7 @@ public class CPU extends Thread{
             Scheduler.SEMAPHORE.release();
         }
     }
+    
     
     public void loadPCB(ProcessControlBlock pcb) {
         this.currentProcessId = pcb.getId();
@@ -117,9 +128,9 @@ public class CPU extends Thread{
 
     @Override
     public void run() {
-        int aux = 0;
+        int countClock = 0;
         while (true) {
-            aux++;
+            countClock++;
             if (interruption != Interruptions.NoInterruptions) {
                 switch (interruption) {
                     case OverFlow:
@@ -371,7 +382,7 @@ public class CPU extends Thread{
             }
 
 
-			if (aux  == delta) {
+			if (countClock  == delta) {
                 interruption = Interruptions.ClockInterrupt;
                 break;
             }
@@ -380,7 +391,7 @@ public class CPU extends Thread{
                 interruption = Interruptions.IoFinishedInterrupt;
                 break;
             }
-            
+
             /*try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
