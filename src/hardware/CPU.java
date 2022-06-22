@@ -23,7 +23,7 @@ public class CPU extends Thread{
     private MemoryManager mm;
 
     public CPU(Word[] _m) { 
-        delta = 5;
+        delta = 7;
         m = _m; 
         reg = new int[10]; 
         pageTable = null;
@@ -38,6 +38,10 @@ public class CPU extends Thread{
 
     public int getCurrentProcessId(){
         return currentProcessId;
+    }
+
+    public int[] getReg(){
+        return reg;
     }
 
     public TypeInterruptions getInterruption(){
@@ -69,14 +73,14 @@ public class CPU extends Thread{
     } 
     
     public void showState() {
-		System.out.println("       " + pc);
-		System.out.print("           ");
-		for (int i = 0; i < 9; i++) {
-			System.out.print("r" + i);
-			System.out.print(": " + reg[i] + "     ");
-		}
-		System.out.println("");
-		System.out.print("           ");
+		// System.out.println("       " + pc);
+		// System.out.print("           ");
+		// for (int i = 0; i < 9; i++) {
+		// 	System.out.print("r" + i);
+		// 	System.out.print(": " + reg[i] + "     ");
+		// }
+		// System.out.println("");
+		// System.out.print("           ");
 		System.out.println(ShowState.dump(ir));
 	}
     
@@ -310,6 +314,12 @@ public class CPU extends Thread{
                         setInterruption(TypeInterruptions.ClockInterrupt);
                         break;
                     }
+
+                    if(getInterruption() == TypeInterruptions.SystemCall){
+                        System.out.println("\n Type Interruption: System Call \n");
+                        interruptionsMethods.packageForConsole();
+                        break;
+                    }
         
                     if(getInterruption() == TypeInterruptions.NoInterruptions){
                         if (Console.FINISHED_IO_PROCESS_IDS.size() > 0) {
@@ -317,12 +327,6 @@ public class CPU extends Thread{
                             break;
                         }
                         continue;
-                    }
-                    
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
                 }
 
@@ -341,19 +345,8 @@ public class CPU extends Thread{
                             break;
     
                         case SystemCall:
-                            Scanner in = new Scanner(System.in);
-    
-                            if (reg[8]==1){
-                                int destino = reg[9];
-                                System.out.println("Enter an integer value: ");
-                                int value = in.nextInt();
-                                m[destino].p = value;
-                            }
-                            if (reg[8]==2){
-                                int ec = reg[9];
-                                System.out.println("Return: " + m[ec].p);
-                            }
-                            setInterruption(TypeInterruptions.NoInterruptions);
+                            System.out.println("Type Interruption: System Call");
+                            interruptionsMethods.packageForConsole();
                             continue;
     
                         case ClockInterrupt:
@@ -374,11 +367,15 @@ public class CPU extends Thread{
                         default:
                             break;
                     }
+                }
+                try {
+                    Thread.sleep(4000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }         
             } catch (Exception ex) {
 				ex.printStackTrace();
 			}
-        }
-        
+        }        
     }
 }

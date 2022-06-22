@@ -1,6 +1,7 @@
 package hardware;
 
 import software.Console;
+import software.IORequest;
 import software.MemoryManager;
 import software.ProcessControlBlock;
 import software.ProcessManager;
@@ -26,27 +27,24 @@ public class Interruptions {
 
     public void noOtherProcessRunningRoutine() {
         int finishedIOProcessId = Console.getFirstFinishedIOProcessId();
-        ProcessControlBlock finishedIOProcess = ProcessManager.findPCB(finishedIOProcessId);
+        ProcessControlBlock finishedIOProcess = ProcessManager.findBlockedPCB(finishedIOProcessId);
         int physicalAddress = MemoryManager.translate(finishedIOProcess.getReg()[8], finishedIOProcess.getPageTable());
-        if (finishedIOProcess.getReg()[7] == 1) {
+        if (finishedIOProcess.getReg()[8] == 1) {
             cpu.m[physicalAddress].opc = Opcode.DATA;
             cpu.m[physicalAddress].p = finishedIOProcess.getIo();
         } else {
             System.out.println(
-                    "\n[Output from process with ID = " + finishedIOProcess.getId() + " - "
-                            + ProcessManager.findPCB(finishedIOProcess.getId()) + "] "
+                    "\n[Output from process with ID = " + finishedIOProcess.getId() + "] "
                             + finishedIOProcess.getIo()
                             + "\n");
         }
         ProcessManager.READY.add(0, finishedIOProcess);
-        // Libera escalonador.
         if (Scheduler.SEMAPHORE.availablePermits() == 0 && ProcessManager.RUNNING == null) {
             Scheduler.SEMAPHORE.release();
         }
     }
 
-    public void
-    saveProcess() {
+    public void saveProcess() {
         ProcessManager.RUNNING = null;
         ProcessControlBlock process = cpu.unloadPCB();
         ProcessManager.READY.add(process);
@@ -87,6 +85,27 @@ public class Interruptions {
                             + finishedIOProcess.getIo()
                             + "\n");
         }
+
+        if (Scheduler.SEMAPHORE.availablePermits() == 0 && ProcessManager.RUNNING == null) {
+            Scheduler.SEMAPHORE.release();
+        }
+    }
+
+    public void packageForConsole() {
+        ProcessManager.RUNNING = null;
+        ProcessControlBlock process = cpu.unloadPCB();
+        IORequest ioRequest;
+
+        if (cpu.getReg()[8] == 1) {
+            ioRequest = new IORequest(process, IORequest.OperationTypes.READ);
+        } else {
+            ioRequest = new IORequest(process, IORequest.OperationTypes.WRITE);
+        }
+
+        ProcessManager.BLOCKED.add(process);
+        Console.IO_REQUESTS.add(ioRequest);
+        cpu.setInterruption(TypeInterruptions.NoInterruptions);
+        Console.SEMAPHORE.release();
 
         if (Scheduler.SEMAPHORE.availablePermits() == 0 && ProcessManager.RUNNING == null) {
             Scheduler.SEMAPHORE.release();

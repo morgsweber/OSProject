@@ -20,6 +20,7 @@ public class Console extends Thread {
     public Console(CPU cpu) {
         this.cpu = cpu;
         this.reader = new Scanner(System.in);
+        this.interrupt = new Interruptions(cpu);
     }
 
     @Override
@@ -42,19 +43,10 @@ public class Console extends Thread {
 
     private void read(ProcessControlBlock process) {
         System.out.println(
-                "\n\n[Processo com ID = " + process.getId() + " - "
-                        + ProcessManager.findPCB(process.getId())
-                        + " - READ] [AVISO: Console está esperando input do usuário]:\n");
-        String inputAsString = reader.nextLine();
-        System.out.println("\nConsole recebeu o input do usuário [OK]\n");
-        int input;
-        try {
-            input = Integer.parseInt(inputAsString);
-        } catch (NumberFormatException error) {
-            System.out
-                    .println("\n[Console] O valor de IO digitado não é um número, será usado o valor -1 neste caso.\n");
-            input = -1;
-        }
+                "\n\n[Process with ID = " + process.getId() + " - READ] [ALERT: waiting input] \n");
+        Integer input = reader.nextInt();
+        System.out.println("\nReceived input\n");
+
         process.setIo(input);
         addFinishedIOProcessId(process.getId());
         removeIORequest(process.getId());
@@ -64,10 +56,8 @@ public class Console extends Thread {
     }
 
     private void write(ProcessControlBlock process) {
-        System.out.println(
-                "\n\n[Processo com ID = " + process.getId() + " - "
-                        + ProcessManager.findPCB(process.getId()) + " - WRITE]\n");
-        int physicalAddress = MemoryManager.translate(process.getReg()[8], process.getPageTable());
+        System.out.println("\n\n[Process with ID = " + process.getId() + " - WRITE]\n");
+        int physicalAddress = MemoryManager.translate(process.getReg()[9], process.getPageTable());
         int output = cpu.m[physicalAddress].p;
         process.setIo(output);
         addFinishedIOProcessId(process.getId());

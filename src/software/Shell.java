@@ -5,7 +5,7 @@ import java.util.Scanner;
 import hardware.CPU;
 import hardware.VM;
 
-public class Shell extends Thread{
+public class Shell extends Thread {
     private CPU cpu;
     private Scheduler scheduler;
 
@@ -78,26 +78,21 @@ public class Shell extends Thread{
         }
         if (code == 1) {
             allocated = VM.pm.createProcess(new Programs().fibonacci10);
-        }
-        else if (code == 2) {
+        } else if (code == 2) {
             allocated = VM.pm.createProcess(new Programs().fatorial);
-        }
-        else if (code == 3) {
+        } else if (code == 3) {
             allocated = VM.pm.createProcess(new Programs().pa);
-        }
-        else if (code == 4) {
+        } else if (code == 4) {
             allocated = VM.pm.createProcess(new Programs().pb);
-        }
-        else if (code == 5) {
+        } else if (code == 5) {
             allocated = VM.pm.createProcess(new Programs().paInput);
-        }
-        else if (code == 6) {
+        } else if (code == 6) {
             allocated = VM.pm.createProcess(new Programs().pbOutput);
         }
         if (!allocated) {
             System.out.println("Memory unavailable to create process");
         }
-        if(VM.pm.READY.size() == 0){
+        if (VM.pm.READY.size() == 0) {
             scheduler.SEMAPHORE.release();
         }
     }
