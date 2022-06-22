@@ -23,7 +23,7 @@ public class CPU extends Thread{
     private MemoryManager mm;
 
     public CPU(Word[] _m) { 
-        delta = 3;
+        delta = 5;
         m = _m; 
         reg = new int[10]; 
         pageTable = null;
@@ -319,11 +319,11 @@ public class CPU extends Thread{
                         continue;
                     }
                     
-                    // try {
-                    //     Thread.sleep(2000);
-                    // } catch (InterruptedException e) {
-                    //     e.printStackTrace();
-                    // }
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 if (interruption != TypeInterruptions.NoInterruptions) {
@@ -374,7 +374,6 @@ public class CPU extends Thread{
                         default:
                             break;
                     }
-                    break;
                 }         
             } catch (Exception ex) {
 				ex.printStackTrace();

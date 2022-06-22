@@ -45,7 +45,8 @@ public class Interruptions {
         }
     }
 
-    public void saveProcess() {
+    public void
+    saveProcess() {
         ProcessManager.RUNNING = null;
         ProcessControlBlock process = cpu.unloadPCB();
         ProcessManager.READY.add(process);

@@ -45,8 +45,7 @@ public class ProcessManager {
         }
         int id = idCounter;
         ProcessControlBlock pcb = new ProcessControlBlock(id, 0, new int[10], pageTable);
-        cpu.loadPCB(pcb); //coloca processo na cpu 
-        READY.add(cpu.unloadPCB());
+        READY.add(pcb);
         System.out.println("Process id " + id + " created");
         idCounter++;
 
@@ -55,7 +54,6 @@ public class ProcessManager {
         }
         return true;
     }
-
 
     public void deallocateProcess(int processId) {
         for (int i = 0; i < READY.size(); i++) {

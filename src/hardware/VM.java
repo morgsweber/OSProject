@@ -23,8 +23,8 @@ public class VM {
             m[i] = new Word(Opcode.___, -1, -1, -1);
         }
         cpu = new CPU(m);
-        shell = new Shell(cpu);
-        scheduler = new Scheduler(cpu); 
+        scheduler = new Scheduler(cpu);
+        shell = new Shell(cpu, scheduler);
         console = new Console(cpu);
         pm = new ProcessManager(memSize, frameSize, cpu, scheduler);
     }
