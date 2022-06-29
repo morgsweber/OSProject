@@ -2,7 +2,7 @@
 
 ##### About the project
 
-This repository was created to develop a university work on Operations Systems. 
+This repository was created to develop a university work on Operational Systems. 
 It was developed: 
 - some programs with low-level instructions
     - the programs are defined in Programs.java and the 'pc' is one incompleted program
