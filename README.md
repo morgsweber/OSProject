@@ -27,11 +27,11 @@ Ao chamar o programa PB Output, ele vai chamar uma interrupção porque o progra
 ele vai continuar executando, até outro programa seja escalonado com ele, se espera que ao dar uma interrupção de Output, apareça
 as mensagens:
 
-              [Process with ID = 0 - WRITE]
+              [Process with ID = _ - WRITE]
               
               [Output from process with ID = 0] 6"
               
-Já quando chamar o PA Input, vai dar uma interrupção para que o usuário faço um Input de um valor solicitado, e botará o processo na 
+Já aochamar o PA Input, vai dar uma interrupção para que o usuário faça um Input de um valor solicitado, e botará o processo na 
 fila de bloqueados para que possam ser executados outros programas enquanto o sistema aguarda o input, para isso 
 pode ser feito um exec < id > de outro programa e na linha abaixo adicionar o input para o programa PA Input, para que ele saia
 da lista de bloqueados e seja executado pelo sistema.
