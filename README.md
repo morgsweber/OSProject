@@ -1,4 +1,4 @@
-# Operation System Project #
+# Operational System Project #
 
 ##### About the project
 
@@ -19,7 +19,7 @@ It was developed:
 - IO
     - when a process needs an IO input, for example, the process is blocked until the user provides the input
 
-[image]
+![image](https://user-images.githubusercontent.com/50406261/176444423-c993cf71-9f40-401e-88d4-f6613dc6bae4.png)
 
 You can find more information about the project in the folder "guidelines" in this repository. 
 
