@@ -1,37 +1,46 @@
-**Nome dos integrantes:** Gustavo G. Lottermann, Morgana Luiza Weber
+# Operation System Project #
 
-**Seção Implementação:**
+##### About the project
 
-O programa implementa todas as características solicitadas, tanto o escalonamento (Scheduler), quanto 
-a fase final, na qual o IO é concorrente.
+This repository was created to develop a university work on Operations Systems. 
+It was developed: 
+- some programs with low-level instructions
+    - the programs are defined in Programs.java and the 'pc' is one incompleted program
+- interruptions
+    - you can find the interruptions created on Interruptions.java
+- system calls
+    - in this part, it was implemented the TRAP instruction
+- memory manager
+    - this memory manager implements memory pagination 
+- process manager
+    - the process has three states: running, ready, or blocked (by IO request)
+- scheduler
+    - the process is scheduled by a number of instructions, each process run 7 instructions then schedule with other 
+- IO
+    - when a process needs an IO input, for example, the process is blocked until the user provides the input
 
-**Seção Testes**
+[image]
 
-FASE 6
+You can find more information about the project in the folder "guidelines" in this repository. 
 
-Para ver o funcionamento do escalonamento, deve-se carregar em memória vários programas a partir do exec < id >.
-Quando carregados 2 ou mais programas, o primeiro será executado, até um tempo Delta, que foi definido como 7
-intruções executadas e após isso, sua execução será interrompida, tendo como saída a mensagem "Type Interruption: 
-Max CPU cycle reached" para dar espaço para que o próximo programa da memória seja executado nesse mesmo número de ciclos de CPU. 
-A partir da mensagem "Scheduling process with id = _", que dá antes da execução de cada um dos programas, dá para saber 
-o id do programa que está em execução no momento. Assim, toda vez que um programa é interrompido pela interrupção do tipo clock,
-é chamado outro programa salvo, até que todos processos da memória acabem e sejam desalocados do sistema. Quando um processo acaba, é printado
-na tela a mensagem "Type Interruption: Program ended". Assim, se espera que todos programas sejam executados, escalonados, até que 
-essa mensagem final apareça para todos os processos.
+##### Requirements
+* [Java](https://www.oracle.com/java/technologies/downloads/)
 
+##### Running the project
 
-FASE 7
+First, you need compile the project using:
 
-Para ver o funcionamento das interrupções por chamadas de sistemas (IO), deve ser chamado os programas PA Input ou PB Output.
-Ao chamar o programa PB Output, ele vai chamar uma interrupção porque o programa precisa dar um output sobre um resultado e ao dar esse output,
-ele vai continuar executando, até outro programa seja escalonado com ele, se espera que ao dar uma interrupção de Output, apareça
-as mensagens:
+```
+cd src
+javac Main.java
+```
 
-              [Process with ID = _ - WRITE]
-              
-              [Output from process with ID = 0] 6"
-              
-Já aochamar o PA Input, vai dar uma interrupção para que o usuário faça um Input de um valor solicitado, e botará o processo na 
-fila de bloqueados para que possam ser executados outros programas enquanto o sistema aguarda o input, para isso 
-pode ser feito um exec < id > de outro programa e na linha abaixo adicionar o input para o programa PA Input, para que ele saia
-da lista de bloqueados e seja executado pelo sistema.
+After, run the project with: 
+
+`java Main`
+
+Then, you will see some instructions to exec or deallocate a process, dump the memory, and exit. If you exec some process, you will see on the terminal the instructions running and the scheduler happening.
+
+##### Observations
+This project has some bugs, but the main features are implemented and functional.
+

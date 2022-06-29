@@ -22,17 +22,3 @@ public class IORequest {
         return operationType;
     }
 }
-
-// Scanner in = new Scanner(System.in);
-
-// if (reg[8]==1){
-// int destino = reg[9];
-// System.out.println("Enter an integer value: ");
-// int value = in.nextInt();
-// m[destino].p = value;
-// }
-// if (reg[8]==2){
-// int ec = reg[9];
-// System.out.println("Return: " + m[ec].p);
-// }
-// setInterruption(TypeInterruptions.NoInterruptions);

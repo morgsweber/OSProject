@@ -73,14 +73,6 @@ public class CPU extends Thread{
     } 
     
     public void showState() {
-		// System.out.println("       " + pc);
-		// System.out.print("           ");
-		// for (int i = 0; i < 9; i++) {
-		// 	System.out.print("r" + i);
-		// 	System.out.print(": " + reg[i] + "     ");
-		// }
-		// System.out.println("");
-		// System.out.print("           ");
 		System.out.println(ShowState.dump(ir));
 	}
     
